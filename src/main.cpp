@@ -58,8 +58,8 @@ int main(int argc, char **argv)
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->count() == 0)
     {
-      KMessageBox::error(0, i18n("No args, sorry sorry sorry"),
-                         i18n("No args caption"));
+      KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Move off my lawn!!!!"),
+                         i18n("No args makes me shrug"));
       exit(ERR_NO_ARGS);
     }
 

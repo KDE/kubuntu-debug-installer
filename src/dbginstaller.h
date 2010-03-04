@@ -24,16 +24,16 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
-#include <QWidget>
+#include <KDialog>
 
 namespace Ui {
     class DbgInstaller;
 }
 
-class DbgInstaller : public QWidget {
+class DbgInstaller : public KDialog {
     Q_OBJECT
 public:
-    DbgInstaller(KCmdLineArgs *args, QWidget *parent = 0);
+    DbgInstaller(KCmdLineArgs *args, KDialog *parent = 0);
     ~DbgInstaller();
     void run();
 

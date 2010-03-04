@@ -25,16 +25,18 @@
 #include <QProcess>
 #include <QProgressBar>
 
-DbgInstaller::DbgInstaller(KCmdLineArgs *args, QWidget *parent) :
-    QWidget(parent),
+DbgInstaller::DbgInstaller(KCmdLineArgs *args, KDialog *parent) :
+    KDialog(parent),
     m_args(args),
     m_dbgpkgs(new QStringList()),
     ui(new Ui::DbgInstaller)
 {
-    ui->setupUi(this);
+    setMainWidget(new QWidget);
+    ui->setupUi(mainWidget());
 
+    setButtons(0);
     setWindowIcon(KIcon("kbugbuster"));
-    setFixedSize(sizeHint());
+    centerOnScreen(this);
 }
 
 DbgInstaller::~DbgInstaller()
@@ -47,7 +49,7 @@ QString DbgInstaller::getPkgName(QString file)
     QProcess *query = new QProcess(this);
     query->start("dpkg-query", QStringList() << "-S" << file);
     query->waitForFinished();
-    return query->readAll().split(':')[0];
+    return query->readAll().split(':')[0]; // really only return first hit?
 }
 
 QString DbgInstaller::getSrcPkg(QString pkg)
@@ -86,8 +88,8 @@ QString DbgInstaller::getDebPkg(QString pkg)
 void DbgInstaller::run()
 {
     ui->label->setText(i18n("looking up packages"));
-    setFixedSize(sizeHint());
     ui->progressBar->setMaximum(m_args->count());
+    update();
 
     int i=0;
     for(; i < m_args->count(); i++)
@@ -108,7 +110,13 @@ void DbgInstaller::run()
         kDebug() << "dbg: " << dbgpkg;
 
         if (dbgpkg.isEmpty()) {
-            // yield error
+//            ui->progressBar->hide();
+//            ui->label->setText(i18n("You are quite the sorry ass, despite my"
+//                                    " best efforts I was not able to find an"
+//                                    " appropriate debug package :( :( :(\n\n"
+//                                    " Do you want to continue anyway?"));
+//            setButtons(KDialog::Yes|KDialog::No);
+//            update();
             continue;
         }
 
@@ -120,7 +128,9 @@ void DbgInstaller::run()
     ui->progressBar->setValue(ui->progressBar->maximum());
     ui->progressBar->deleteLater();
 
-    KMessageBox::information(this, m_dbgpkgs->join("\n"));
+    ui->label->setText(m_dbgpkgs->join("\n"));
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
 }
 
 void DbgInstaller::changeEvent(QEvent *e)
