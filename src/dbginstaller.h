@@ -35,19 +35,27 @@ class DbgInstaller : public KDialog {
 public:
     DbgInstaller(KCmdLineArgs *args, KDialog *parent = 0);
     ~DbgInstaller();
-    void run();
 
 protected:
     void changeEvent(QEvent *e);
 
 private:
+    void askInstall();
     QString getPkgName(QString);
     QString getSrcPkg(QString);
     QString getDebPkg(QString);
 
     KCmdLineArgs *m_args;
     QStringList *m_dbgpkgs;
+    QStringList *m_nodbgpkgs;
     Ui::DbgInstaller *ui;
+
+signals:
+    void invokeRun();
+
+private slots:
+    void run();
+
 };
 
 #endif // DBGINSTALLER_H

@@ -65,8 +65,6 @@ int main(int argc, char **argv)
 
     DbgInstaller *installer = new DbgInstaller(args);
     installer->setWindowTitle(about.programName());
-    installer->show();
-    installer->run();
 
     args->clear();
 

@@ -29,6 +29,7 @@ DbgInstaller::DbgInstaller(KCmdLineArgs *args, KDialog *parent) :
     KDialog(parent),
     m_args(args),
     m_dbgpkgs(new QStringList()),
+    m_nodbgpkgs(new QStringList()),
     ui(new Ui::DbgInstaller)
 {
     setMainWidget(new QWidget);
@@ -37,11 +38,27 @@ DbgInstaller::DbgInstaller(KCmdLineArgs *args, KDialog *parent) :
     setButtons(0);
     setWindowIcon(KIcon("kbugbuster"));
     centerOnScreen(this);
+
+    connect(this, SIGNAL(invokeRun()), this, SLOT(run()));
+
+    show();
+    emit invokeRun();
 }
 
 DbgInstaller::~DbgInstaller()
 {
     delete ui;
+}
+
+void DbgInstaller::askInstall()
+{
+    kDebug();
+    show();
+    ui->progressBar->deleteLater();
+    ui->label->setText(m_dbgpkgs->join("\n"));
+    update();
+    setButtons(KDialog::Ok | KDialog::Cancel);
+    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
 }
 
 QString DbgInstaller::getPkgName(QString file)
@@ -56,8 +73,7 @@ QString DbgInstaller::getSrcPkg(QString pkg)
 {
 //    kDebug()<<pkg;
     QProcess *query = new QProcess(this);
-    query->start("dpkg-query", QStringList() << "-W"
-                      << "-f=${Source}" << pkg);
+    query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
     query->waitForFinished();
     return query->readAll();
 }
@@ -110,27 +126,36 @@ void DbgInstaller::run()
         kDebug() << "dbg: " << dbgpkg;
 
         if (dbgpkg.isEmpty()) {
-//            ui->progressBar->hide();
-//            ui->label->setText(i18n("You are quite the sorry ass, despite my"
-//                                    " best efforts I was not able to find an"
-//                                    " appropriate debug package :( :( :(\n\n"
-//                                    " Do you want to continue anyway?"));
-//            setButtons(KDialog::Yes|KDialog::No);
-//            update();
+            m_nodbgpkgs->append(m_args->arg(i));
             continue;
         }
 
         m_dbgpkgs->append(dbgpkg);
     }
 
-    kDebug() << *m_dbgpkgs;
-
     ui->progressBar->setValue(ui->progressBar->maximum());
-    ui->progressBar->deleteLater();
 
-    ui->label->setText(m_dbgpkgs->join("\n"));
-    setButtons(KDialog::Ok | KDialog::Cancel);
-    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
+    kDebug() << *m_dbgpkgs;
+    kDebug() << *m_nodbgpkgs;
+
+    if (!m_nodbgpkgs->isEmpty()) {
+        QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
+                               " No newline for u! And no white space either"
+                               "Do you want me to search anywayz?");
+        int ret = KMessageBox::warningYesNoList(this, msgtext,
+                                                *m_nodbgpkgs,
+                                                i18n("Aint no debug packages"),
+                                                KStandardGuiItem::yes(),
+                                                KStandardGuiItem::no(),
+                                                QString(),
+                                                KMessageBox::Dangerous |
+                                                KMessageBox::Notify);
+        if (ret != KMessageBox::Yes) {
+            exit(2);
+        }
+    }
+
+    askInstall();
 }
 
 void DbgInstaller::changeEvent(QEvent *e)
