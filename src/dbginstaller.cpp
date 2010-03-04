@@ -1,13 +1,34 @@
+/***************************************************************************
+ *   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>              *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License as        *
+ *   published by the Free Software Foundation; either version 2 of        *
+ *   the License or (at your option) version 3 or any later version        *
+ *   accepted by the membership of KDE e.V. (or its successor approved     *
+ *   by the membership of KDE e.V.), which shall act as a proxy            *
+ *   defined in Section 14 of version 3 of the license.                    *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ ***************************************************************************/
+
 #include "dbginstaller.h"
 #include "ui_dbginstaller.h"
 
+#include <KMessageBox>
 #include <QProcess>
 #include <QProgressBar>
 
 DbgInstaller::DbgInstaller(KCmdLineArgs *args, QWidget *parent) :
     QWidget(parent),
     m_args(args),
-    m_dbgpkgs(new QList<QString>()),
+    m_dbgpkgs(new QStringList()),
     ui(new Ui::DbgInstaller)
 {
     ui->setupUi(this);
@@ -44,6 +65,7 @@ QString DbgInstaller::getDebPkg(QString pkg)
     // TODO: map packages names
 
     QProcess *query = new QProcess;
+
     query->start(QString("apt-cache show %1-dbg").arg(pkg));
     query->waitForFinished();
     kdDebug() << query->exitCode();
@@ -87,6 +109,7 @@ void DbgInstaller::run()
 
         if (dbgpkg.isEmpty()) {
             // yield error
+            continue;
         }
 
         m_dbgpkgs->append(dbgpkg);
@@ -95,6 +118,9 @@ void DbgInstaller::run()
     kDebug() << *m_dbgpkgs;
 
     ui->progressBar->setValue(ui->progressBar->maximum());
+    ui->progressBar->deleteLater();
+
+    KMessageBox::information(this, m_dbgpkgs->join("\n"));
 }
 
 void DbgInstaller::changeEvent(QEvent *e)
