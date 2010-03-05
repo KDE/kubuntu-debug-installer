@@ -37,6 +37,7 @@ public:
     ~DbgInstaller();
 
 private:
+    void askMissing();
     void askInstall();
     QString getPkgName(QString);
     QString getSrcPkg(QString);

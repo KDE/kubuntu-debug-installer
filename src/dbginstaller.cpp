@@ -60,6 +60,24 @@ void DbgInstaller::install()
     }
 }
 
+void DbgInstaller::askMissing()
+{
+    QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
+                           " No newline for u! And no white space either"
+                           "Do you want me to search anywayz?");
+    int ret = KMessageBox::warningYesNoList(this, msgtext,
+                                            *m_nodbgpkgs,
+                                            i18n("Aint no debug packages"),
+                                            KStandardGuiItem::yes(),
+                                            KStandardGuiItem::no(),
+                                            QString(),
+                                            KMessageBox::Dangerous |
+                                            KMessageBox::Notify);
+    if (ret != KMessageBox::Yes) {
+        exit(ERR_NO_SYMBOLS);
+    }
+}
+
 void DbgInstaller::askInstall()
 {
 //    ui->progressBar->deleteLater();
@@ -103,9 +121,7 @@ QString DbgInstaller::getDebPkg(QString pkg)
 
     query->start(QString("apt-cache show %1-dbg").arg(pkg));
     query->waitForFinished();
-    kdDebug() << query->exitCode();
     if (query->exitCode() == 0) {
-        kdDebug() << query->exitCode();
         return QString("%1-dbg").arg(pkg);
     }
 
@@ -126,21 +142,20 @@ void DbgInstaller::run()
     int i=0;
     for(; i < m_args->count(); i++)
     {
-        kDebug()<<m_args->arg(i);
+        QString pkg;
+        QString dbgpkg;
+
         progressBar()->setValue(i);
 
-        QString pkg = getPkgName(m_args->arg(i));
-        kDebug()<<"pkg: " << pkg;
+        pkg = getPkgName(m_args->arg(i));
+        dbgpkg = getDebPkg(pkg);
 
-        QString dbgpkg = getDebPkg(pkg);
         if (dbgpkg.isEmpty()) {
             QString srcpkg = getSrcPkg(pkg);
-            kDebug()<<"srcpkg: " << srcpkg;
             dbgpkg = getDebPkg(srcpkg);
         }
 
-        kDebug() << "dbg: " << dbgpkg;
-
+        // still empty?
         if (dbgpkg.isEmpty()) {
             m_nodbgpkgs->append(m_args->arg(i));
             continue;
@@ -151,24 +166,8 @@ void DbgInstaller::run()
 
     progressBar()->setValue(progressBar()->maximum());
 
-    kDebug() << *m_dbgpkgs;
-    kDebug() << *m_nodbgpkgs;
-
     if (!m_nodbgpkgs->isEmpty()) {
-        QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
-                               " No newline for u! And no white space either"
-                               "Do you want me to search anywayz?");
-        int ret = KMessageBox::warningYesNoList(this, msgtext,
-                                                *m_nodbgpkgs,
-                                                i18n("Aint no debug packages"),
-                                                KStandardGuiItem::yes(),
-                                                KStandardGuiItem::no(),
-                                                QString(),
-                                                KMessageBox::Dangerous |
-                                                KMessageBox::Notify);
-        if (ret != KMessageBox::Yes) {
-            exit(ERR_NO_SYMBOLS);
-        }
+        askMissing();
     }
 
     askInstall();
