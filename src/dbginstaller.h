@@ -37,6 +37,7 @@ public:
     ~DbgInstaller();
 
 private:
+    void install();
     void askMissing();
     void askInstall();
     QString getPkgName(QString);
@@ -52,7 +53,6 @@ signals:
 
 private slots:
     void run();
-    void install();
 
 };
 
