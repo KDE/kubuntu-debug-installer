@@ -31,6 +31,9 @@ DbgInstaller::DbgInstaller(KCmdLineArgs *args, KProgressDialog *parent) :
     m_nodbgpkgs(new QStringList())
 {
     setWindowIcon(KIcon("kbugbuster"));
+    // TODO: Move lookups to thread, so that UI becomes non-blocking and
+    // can be cancelled.
+    showCancelButton(false);
 
     connect(this, SIGNAL(invokeRun()), this, SLOT(run()));
 
@@ -160,7 +163,7 @@ void DbgInstaller::run()
             dbgpkg = getDebPkg(srcpkg);
         }
 
-        // still empty?
+        // Still empty?
         if (dbgpkg.isEmpty()) {
             m_nodbgpkgs->append(m_args->arg(i));
             continue;
