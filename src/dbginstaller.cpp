@@ -116,6 +116,10 @@ QString DbgInstaller::getSrcPkg(QString pkg)
 QString DbgInstaller::getDebPkg(QString pkg)
 {
     // TODO: map packages names for Qt
+    if (pkg.contains("qt4-x11"))
+    {
+        pkg = "libqt4";
+    }
 
     QProcess *query = new QProcess;
 
@@ -161,7 +165,10 @@ void DbgInstaller::run()
             continue;
         }
 
-        m_dbgpkgs->append(dbgpkg);
+        if (!m_dbgpkgs->contains(dbgpkg))
+        {
+            m_dbgpkgs->append(dbgpkg);
+        }
     }
 
     progressBar()->setValue(progressBar()->maximum());
