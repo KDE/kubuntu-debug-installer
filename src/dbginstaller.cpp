@@ -58,10 +58,13 @@ void DbgInstaller::install()
     if(install->exitCode() != 0) {
         exit(ERR_RANDOM_ERR);
     }
+
+    close();
 }
 
 void DbgInstaller::askMissing()
 {
+    hide();
     QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
                            " No newline for u! And no white space either"
                            "Do you want me to search anywayz?");
@@ -80,21 +83,19 @@ void DbgInstaller::askMissing()
 
 void DbgInstaller::askInstall()
 {
-//    ui->progressBar->deleteLater();
-//    ui->label->setText(i18n("This very beautiful dialog is going to install"
-//                            "the following packages\n\n%1")
-//                       .arg(m_dbgpkgs->join("\n")));
-//    setButtons(KDialog::Ok | KDialog::Cancel);
-//    repaint();
-//    connect(this, SIGNAL(okClicked()), this, SLOT(install()));
-//    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
     hide();
-    KMessageBox::questionYesNoList(this,
+    int ret = KMessageBox::questionYesNoList(this,
                                    i18n("Do you want to allow this wonderful"
                                         " application to install below listed"
                                         " packages?"),
                                    *m_dbgpkgs,
                                    i18n("Do you want to install the debug packages?"));
+    if(ret != KMessageBox::Yes)
+    {
+        exit(ERR_CANCEL);
+    }
+
+    install();
 }
 
 QString DbgInstaller::getPkgName(QString file)
