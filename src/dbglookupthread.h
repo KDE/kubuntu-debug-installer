@@ -25,11 +25,21 @@
 
 class DbgLookupThread : public QThread
 {
+    Q_OBJECT
 public:
+    DbgLookupThread(QObject *parent = 0, QStringList *files = NULL);
+    void run();
+
+private:
     QString getPkgName(QString);
     QString getSrcPkg(QString);
     QString getDebPkg(QString);
-    QString run(QString);
+
+    QStringList *m_files;
+
+signals:
+    void foundDbgPkg(QString dbgpkg);
+    void foundNoDbgPkg(QString file);
 };
 
 #endif // DBGLOOKUPTHREAD_H

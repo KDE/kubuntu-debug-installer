@@ -23,9 +23,14 @@
 #include <KDebug>
 #include <QProcess>
 
+DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
+        QThread(parent),
+        m_files(files)
+{}
+
 QString DbgLookupThread::getPkgName(QString file)
 {
-    QProcess *query = new QProcess(this);
+    QProcess *query = new QProcess();
     query->start("dpkg-query", QStringList() << "-S" << file);
     query->waitForFinished();
     return query->readAll().split(':')[0]; // really only return first hit?
@@ -33,7 +38,7 @@ QString DbgLookupThread::getPkgName(QString file)
 
 QString DbgLookupThread::getSrcPkg(QString pkg)
 {
-    QProcess *query = new QProcess(this);
+    QProcess *query = new QProcess();
     query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
     query->waitForFinished();
     return query->readAll();
@@ -47,7 +52,7 @@ QString DbgLookupThread::getDebPkg(QString pkg)
         pkg = "libqt4";
     }
 
-    QProcess *query = new QProcess;
+    QProcess *query = new QProcess();
 
     query->start(QString("apt-cache show %1-dbg").arg(pkg));
     query->waitForFinished();
@@ -64,23 +69,27 @@ QString DbgLookupThread::getDebPkg(QString pkg)
     return "";
 }
 
-QString DbgLookupThread::run(QString file)
+void DbgLookupThread::run()
 {
-    QString pkg;
-    QString dbgpkg;
+    int i=0;
+    for(; i < m_files->count(); i++) {
+        QString pkg;
+        QString dbgpkg;
 
-    pkg = getPkgName(file);
-    dbgpkg = getDebPkg(pkg);
+        pkg = getPkgName(m_files->at(i));
+        dbgpkg = getDebPkg(pkg);
 
-    if (dbgpkg.isEmpty()) {
-        QString srcpkg = getSrcPkg(pkg);
-        dbgpkg = getDebPkg(srcpkg);
+        if (dbgpkg.isEmpty()) {
+            QString srcpkg = getSrcPkg(pkg);
+            dbgpkg = getDebPkg(srcpkg);
+        }
+
+        if (dbgpkg.isEmpty()) {
+            emit foundNoDbgPkg(m_files->at(i));
+        } else {
+            emit foundDbgPkg(dbgpkg);
+        }
     }
 
-    kDebug()<<dbgpkg;
-    if (dbgpkg.isEmpty()) {
-        return "";
-    }
-
-    return dbgpkg;
+    exec();
 }

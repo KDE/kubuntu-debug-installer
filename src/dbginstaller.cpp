@@ -19,21 +19,19 @@
  ***************************************************************************/
 
 #include "dbginstaller.h"
+#include "dbglookupthread.h"
 
 #include <KMessageBox>
 #include <QProcess>
 #include <QProgressBar>
 
-DbgInstaller::DbgInstaller(KCmdLineArgs *args, KProgressDialog *parent) :
+DbgInstaller::DbgInstaller(KProgressDialog *parent, QStringList *args) :
     KProgressDialog(parent),
     m_args(args),
     m_dbgpkgs(new QStringList()),
     m_nodbgpkgs(new QStringList())
 {
     setWindowIcon(KIcon("kbugbuster"));
-    // TODO: Move lookups to thread, so that UI becomes non-blocking and
-    // can be cancelled.
-    showCancelButton(false);
 
     connect(this, SIGNAL(invokeRun()), this, SLOT(run()));
 
@@ -43,8 +41,7 @@ DbgInstaller::DbgInstaller(KCmdLineArgs *args, KProgressDialog *parent) :
 
 DbgInstaller::~DbgInstaller()
 {
-    if (wasCancelled())
-    {
+    if (wasCancelled()) {
         exit(ERR_CANCEL);
     }
     delete m_dbgpkgs;
@@ -67,7 +64,6 @@ void DbgInstaller::install()
 
 void DbgInstaller::askMissing()
 {
-    hide();
     QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
                            " No newline for u! And no white space either"
                            "Do you want me to search anywayz?");
@@ -81,7 +77,6 @@ void DbgInstaller::askMissing()
 
 void DbgInstaller::askInstall()
 {
-    hide();
     QString msgtext = i18n("Do you want to allow this wonderful application to"
                            " install below listed packages?");
     QString msgcaption = i18n("Do you want to install the debug packages?");
@@ -94,85 +89,38 @@ void DbgInstaller::askInstall()
     install();
 }
 
-QString DbgInstaller::getPkgName(QString file)
+void DbgInstaller::incrementProgress()
 {
-    QProcess *query = new QProcess(this);
-    query->start("dpkg-query", QStringList() << "-S" << file);
-    query->waitForFinished();
-    return query->readAll().split(':')[0]; // really only return first hit?
+    progressBar()->setValue(progressBar()->value()+1);
+    if (progressBar()->value() == progressBar()->maximum()) {
+        if (!m_nodbgpkgs->empty()) {
+            askMissing();
+        }
+        askInstall();
+    }
 }
 
-QString DbgInstaller::getSrcPkg(QString pkg)
+void DbgInstaller::foundDbgPkg(QString dbgpkg)
 {
-    QProcess *query = new QProcess(this);
-    query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
-    query->waitForFinished();
-    return query->readAll();
+    if (!m_dbgpkgs->contains(dbgpkg)) {
+        m_dbgpkgs->append(dbgpkg);
+    }
+    incrementProgress();
 }
 
-QString DbgInstaller::getDebPkg(QString pkg)
+void DbgInstaller::foundNoDbgPkg(QString file)
 {
-    // TODO: map packages names for Qt
-    if (pkg.contains("qt4-x11"))
-    {
-        pkg = "libqt4";
-    }
-
-    QProcess *query = new QProcess;
-
-    query->start(QString("apt-cache show %1-dbg").arg(pkg));
-    query->waitForFinished();
-    if (query->exitCode() == 0) {
-        return QString("%1-dbg").arg(pkg);
-    }
-
-    query->start(QString("apt-cache show %1-dbgsym").arg(pkg));
-    query->waitForFinished();
-    if (query->exitCode() == 0) {
-        return QString("%1-dbgsym").arg(pkg);
-    }
-
-    return "";
+    m_nodbgpkgs->append(file);
+    incrementProgress();
 }
 
 void DbgInstaller::run()
 {
     setLabelText(i18n("Looking up packages"));
     progressBar()->setMaximum(m_args->count());
-
-    int i=0;
-    for(; i < m_args->count(); i++)
-    {
-        QString pkg;
-        QString dbgpkg;
-
-        progressBar()->setValue(i);
-
-        pkg = getPkgName(m_args->arg(i));
-        dbgpkg = getDebPkg(pkg);
-
-        if (dbgpkg.isEmpty()) {
-            QString srcpkg = getSrcPkg(pkg);
-            dbgpkg = getDebPkg(srcpkg);
-        }
-
-        // Still empty?
-        if (dbgpkg.isEmpty()) {
-            m_nodbgpkgs->append(m_args->arg(i));
-            continue;
-        }
-
-        if (!m_dbgpkgs->contains(dbgpkg))
-        {
-            m_dbgpkgs->append(dbgpkg);
-        }
-    }
-
-    progressBar()->setValue(progressBar()->maximum());
-
-    if (!m_nodbgpkgs->isEmpty()) {
-        askMissing();
-    }
-
-    askInstall();
+    incrementProgress();
+    DbgLookupThread *t = new DbgLookupThread(this, m_args);
+    connect(t, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
+    connect(t, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
+    t->start();
 }

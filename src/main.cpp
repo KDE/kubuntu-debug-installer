@@ -48,23 +48,26 @@ int main(int argc, char **argv)
     KApplication app;
 
     // do not restore!
-    if (app.isSessionRestored())
-    {
+    if (app.isSessionRestored()) {
       exit(0);
     }
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (args->count() == 0)
-    {
+    if (args->count() == 0) {
       KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Move off my lawn!!!!"),
                          i18n("No args makes me shrug"));
       exit(ERR_RANDOM_ERR);
     }
 
-    DbgInstaller *installer = new DbgInstaller(args);
-    installer->setWindowTitle(about.programName());
+    QStringList *arglist = new QStringList();
+    for(int i = 0; i < args->count(); i++) {
+       arglist->append(args->arg(i));
+    }
 
     args->clear();
+
+    DbgInstaller *installer = new DbgInstaller(0, arglist);
+    installer->setWindowTitle(about.programName());
 
     return app.exec();
 }
