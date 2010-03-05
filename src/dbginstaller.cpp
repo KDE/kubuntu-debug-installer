@@ -50,6 +50,18 @@ DbgInstaller::~DbgInstaller()
     delete ui;
 }
 
+void DbgInstaller::install()
+{
+    hide();
+    QProcess *install = new QProcess(this);
+    install->start(QString("kdesudo -- install-package --install %1")
+                   .arg(m_dbgpkgs->join(" ")));
+    install->waitForFinished();
+    if(install->exitCode() != 0) {
+        exit(1);
+    }
+}
+
 void DbgInstaller::askInstall()
 {
     kDebug();
@@ -58,6 +70,7 @@ void DbgInstaller::askInstall()
     ui->label->setText(m_dbgpkgs->join("\n"));
     update();
     setButtons(KDialog::Ok | KDialog::Cancel);
+    connect(this, SIGNAL(okClicked()), this, SLOT(install()));
     connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
 }
 
@@ -103,9 +116,9 @@ QString DbgInstaller::getDebPkg(QString pkg)
 
 void DbgInstaller::run()
 {
-    ui->label->setText(i18n("looking up packages"));
+    ui->label->setText(i18n("Looking up packages"));
     ui->progressBar->setMaximum(m_args->count());
-    update();
+    repaint();
 
     int i=0;
     for(; i < m_args->count(); i++)
@@ -156,16 +169,4 @@ void DbgInstaller::run()
     }
 
     askInstall();
-}
-
-void DbgInstaller::changeEvent(QEvent *e)
-{
-    QWidget::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
 }

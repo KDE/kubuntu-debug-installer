@@ -36,9 +36,6 @@ public:
     DbgInstaller(KCmdLineArgs *args, KDialog *parent = 0);
     ~DbgInstaller();
 
-protected:
-    void changeEvent(QEvent *e);
-
 private:
     void askInstall();
     QString getPkgName(QString);
@@ -55,6 +52,7 @@ signals:
 
 private slots:
     void run();
+    void install();
 
 };
 
