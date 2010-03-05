@@ -24,20 +24,16 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
-#include <KDialog>
+#include <KProgressDialog>
 
 #define ERR_RANDOM_ERR 1
 #define ERR_NO_SYMBOLS 2
 #define ERR_CANCEL 3
 
-namespace Ui {
-    class DbgInstaller;
-}
-
-class DbgInstaller : public KDialog {
+class DbgInstaller : public KProgressDialog {
     Q_OBJECT
 public:
-    DbgInstaller(KCmdLineArgs *args, KDialog *parent = 0);
+    DbgInstaller(KCmdLineArgs *args, KProgressDialog *parent = 0);
     ~DbgInstaller();
 
 private:
@@ -49,7 +45,6 @@ private:
     KCmdLineArgs *m_args;
     QStringList *m_dbgpkgs;
     QStringList *m_nodbgpkgs;
-    Ui::DbgInstaller *ui;
 
 signals:
     void invokeRun();

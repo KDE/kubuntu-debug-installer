@@ -19,25 +19,18 @@
  ***************************************************************************/
 
 #include "dbginstaller.h"
-#include "ui_dbginstaller.h"
 
 #include <KMessageBox>
 #include <QProcess>
 #include <QProgressBar>
 
-DbgInstaller::DbgInstaller(KCmdLineArgs *args, KDialog *parent) :
-    KDialog(parent),
+DbgInstaller::DbgInstaller(KCmdLineArgs *args, KProgressDialog *parent) :
+    KProgressDialog(parent),
     m_args(args),
     m_dbgpkgs(new QStringList()),
-    m_nodbgpkgs(new QStringList()),
-    ui(new Ui::DbgInstaller)
+    m_nodbgpkgs(new QStringList())
 {
-    setMainWidget(new QWidget);
-    ui->setupUi(mainWidget());
-
-    setButtons(0);
     setWindowIcon(KIcon("kbugbuster"));
-    centerOnScreen(this);
 
     connect(this, SIGNAL(invokeRun()), this, SLOT(run()));
 
@@ -47,7 +40,12 @@ DbgInstaller::DbgInstaller(KCmdLineArgs *args, KDialog *parent) :
 
 DbgInstaller::~DbgInstaller()
 {
-    delete ui;
+    if (wasCancelled())
+    {
+        exit(ERR_CANCEL);
+    }
+    delete m_dbgpkgs;
+    delete m_nodbgpkgs;
 }
 
 void DbgInstaller::install()
@@ -64,14 +62,21 @@ void DbgInstaller::install()
 
 void DbgInstaller::askInstall()
 {
-    kDebug();
-    show();
-    ui->progressBar->deleteLater();
-    ui->label->setText(m_dbgpkgs->join("\n"));
-    update();
-    setButtons(KDialog::Ok | KDialog::Cancel);
-    connect(this, SIGNAL(okClicked()), this, SLOT(install()));
-    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
+//    ui->progressBar->deleteLater();
+//    ui->label->setText(i18n("This very beautiful dialog is going to install"
+//                            "the following packages\n\n%1")
+//                       .arg(m_dbgpkgs->join("\n")));
+//    setButtons(KDialog::Ok | KDialog::Cancel);
+//    repaint();
+//    connect(this, SIGNAL(okClicked()), this, SLOT(install()));
+//    connect(this, SIGNAL(cancelClicked()), this, SLOT(close()));
+    hide();
+    KMessageBox::questionYesNoList(this,
+                                   i18n("Do you want to allow this wonderful"
+                                        " application to install below listed"
+                                        " packages?"),
+                                   *m_dbgpkgs,
+                                   i18n("Do you want to install the debug packages?"));
 }
 
 QString DbgInstaller::getPkgName(QString file)
@@ -84,7 +89,6 @@ QString DbgInstaller::getPkgName(QString file)
 
 QString DbgInstaller::getSrcPkg(QString pkg)
 {
-//    kDebug()<<pkg;
     QProcess *query = new QProcess(this);
     query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
     query->waitForFinished();
@@ -93,7 +97,7 @@ QString DbgInstaller::getSrcPkg(QString pkg)
 
 QString DbgInstaller::getDebPkg(QString pkg)
 {
-    // TODO: map packages names
+    // TODO: map packages names for Qt
 
     QProcess *query = new QProcess;
 
@@ -116,15 +120,14 @@ QString DbgInstaller::getDebPkg(QString pkg)
 
 void DbgInstaller::run()
 {
-    ui->label->setText(i18n("Looking up packages"));
-    ui->progressBar->setMaximum(m_args->count());
-    repaint();
+    setLabelText(i18n("Looking up packages"));
+    progressBar()->setMaximum(m_args->count());
 
     int i=0;
     for(; i < m_args->count(); i++)
     {
         kDebug()<<m_args->arg(i);
-        ui->progressBar->setValue(i);
+        progressBar()->setValue(i);
 
         QString pkg = getPkgName(m_args->arg(i));
         kDebug()<<"pkg: " << pkg;
@@ -146,7 +149,7 @@ void DbgInstaller::run()
         m_dbgpkgs->append(dbgpkg);
     }
 
-    ui->progressBar->setValue(ui->progressBar->maximum());
+    progressBar()->setValue(progressBar()->maximum());
 
     kDebug() << *m_dbgpkgs;
     kDebug() << *m_nodbgpkgs;

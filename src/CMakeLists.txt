@@ -3,8 +3,6 @@ set(installdbgsymbols_SRCS
    main.cpp
  )
 
-kde4_add_ui_files(installdbgsymbols_SRCS dbginstaller.ui)
-
 kde4_add_executable(installdbgsymbols ${installdbgsymbols_SRCS})
 
 target_link_libraries(installdbgsymbols ${KDE4_KDEUI_LIBS} )
