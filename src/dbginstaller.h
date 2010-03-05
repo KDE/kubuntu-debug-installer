@@ -26,6 +26,10 @@
 
 #include <KDialog>
 
+#define ERR_RANDOM_ERR 1
+#define ERR_NO_SYMBOLS 2
+#define ERR_CANCEL 3
+
 namespace Ui {
     class DbgInstaller;
 }

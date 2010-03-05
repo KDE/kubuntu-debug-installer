@@ -26,8 +26,6 @@
 #include <KLocale>
 #include <KMessageBox>
 
-#define ERR_NO_ARGS 1
-
 static const char description[] =
     I18N_NOOP("A debug symbol installer for KDE");
 
@@ -60,7 +58,7 @@ int main(int argc, char **argv)
     {
       KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Move off my lawn!!!!"),
                          i18n("No args makes me shrug"));
-      exit(ERR_NO_ARGS);
+      exit(ERR_RANDOM_ERR);
     }
 
     DbgInstaller *installer = new DbgInstaller(args);

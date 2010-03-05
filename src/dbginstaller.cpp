@@ -58,7 +58,7 @@ void DbgInstaller::install()
                    .arg(m_dbgpkgs->join(" ")));
     install->waitForFinished();
     if(install->exitCode() != 0) {
-        exit(1);
+        exit(ERR_RANDOM_ERR);
     }
 }
 
@@ -164,7 +164,7 @@ void DbgInstaller::run()
                                                 KMessageBox::Dangerous |
                                                 KMessageBox::Notify);
         if (ret != KMessageBox::Yes) {
-            exit(2);
+            exit(ERR_NO_SYMBOLS);
         }
     }
 
