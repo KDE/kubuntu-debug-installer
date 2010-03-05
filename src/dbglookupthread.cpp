@@ -1,0 +1,86 @@
+/***************************************************************************
+ *   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>              *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License as        *
+ *   published by the Free Software Foundation; either version 2 of        *
+ *   the License or (at your option) version 3 or any later version        *
+ *   accepted by the membership of KDE e.V. (or its successor approved     *
+ *   by the membership of KDE e.V.), which shall act as a proxy            *
+ *   defined in Section 14 of version 3 of the license.                    *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ ***************************************************************************/
+
+#include "dbglookupthread.h"
+
+#include <KDebug>
+#include <QProcess>
+
+QString DbgLookupThread::getPkgName(QString file)
+{
+    QProcess *query = new QProcess(this);
+    query->start("dpkg-query", QStringList() << "-S" << file);
+    query->waitForFinished();
+    return query->readAll().split(':')[0]; // really only return first hit?
+}
+
+QString DbgLookupThread::getSrcPkg(QString pkg)
+{
+    QProcess *query = new QProcess(this);
+    query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
+    query->waitForFinished();
+    return query->readAll();
+}
+
+QString DbgLookupThread::getDebPkg(QString pkg)
+{
+    // TODO: map packages names for Qt
+    if (pkg.contains("qt4-x11"))
+    {
+        pkg = "libqt4";
+    }
+
+    QProcess *query = new QProcess;
+
+    query->start(QString("apt-cache show %1-dbg").arg(pkg));
+    query->waitForFinished();
+    if (query->exitCode() == 0) {
+        return QString("%1-dbg").arg(pkg);
+    }
+
+    query->start(QString("apt-cache show %1-dbgsym").arg(pkg));
+    query->waitForFinished();
+    if (query->exitCode() == 0) {
+        return QString("%1-dbgsym").arg(pkg);
+    }
+
+    return "";
+}
+
+QString DbgLookupThread::run(QString file)
+{
+    QString pkg;
+    QString dbgpkg;
+
+    pkg = getPkgName(file);
+    dbgpkg = getDebPkg(pkg);
+
+    if (dbgpkg.isEmpty()) {
+        QString srcpkg = getSrcPkg(pkg);
+        dbgpkg = getDebPkg(srcpkg);
+    }
+
+    kDebug()<<dbgpkg;
+    if (dbgpkg.isEmpty()) {
+        return "";
+    }
+
+    return dbgpkg;
+}

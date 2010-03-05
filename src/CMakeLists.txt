@@ -1,4 +1,5 @@
 set(installdbgsymbols_SRCS
+   dbglookupthread.cpp
    dbginstaller.cpp
    main.cpp
  )
