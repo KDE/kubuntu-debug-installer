@@ -87,8 +87,7 @@ void DbgInstaller::askInstall()
     QString msgcaption = i18n("Do you want to install the debug packages?");
     int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
                                              msgcaption);
-    if(ret != KMessageBox::Yes)
-    {
+    if(ret != KMessageBox::Yes) {
         exit(ERR_CANCEL);
     }
 
