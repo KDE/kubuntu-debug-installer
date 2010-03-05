@@ -71,14 +71,9 @@ void DbgInstaller::askMissing()
     QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
                            " No newline for u! And no white space either"
                            "Do you want me to search anywayz?");
-    int ret = KMessageBox::warningYesNoList(this, msgtext,
-                                            *m_nodbgpkgs,
-                                            i18n("Aint no debug packages"),
-                                            KStandardGuiItem::yes(),
-                                            KStandardGuiItem::no(),
-                                            QString(),
-                                            KMessageBox::Dangerous |
-                                            KMessageBox::Notify);
+    QString msgcaption = i18n("Aint no debug packages");
+    int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
+                                            msgcaption);
     if (ret != KMessageBox::Yes) {
         exit(ERR_NO_SYMBOLS);
     }
@@ -87,12 +82,11 @@ void DbgInstaller::askMissing()
 void DbgInstaller::askInstall()
 {
     hide();
-    int ret = KMessageBox::questionYesNoList(this,
-                                   i18n("Do you want to allow this wonderful"
-                                        " application to install below listed"
-                                        " packages?"),
-                                   *m_dbgpkgs,
-                                   i18n("Do you want to install the debug packages?"));
+    QString msgtext = i18n("Do you want to allow this wonderful application to"
+                           " install below listed packages?");
+    QString msgcaption = i18n("Do you want to install the debug packages?");
+    int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
+                                             msgcaption);
     if(ret != KMessageBox::Yes)
     {
         exit(ERR_CANCEL);
