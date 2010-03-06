@@ -1,4 +1,4 @@
-project(installdbgsymbols)
+project(kubuntu-debug-installer)
 
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)

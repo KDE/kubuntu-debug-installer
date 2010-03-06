@@ -33,7 +33,7 @@ static const char version[] = "0.1";
 
 int main(int argc, char **argv)
 {
-    KAboutData about("installdbgsymbols", 0, ki18n("Debug symbol installer"),
+    KAboutData about("kubuntu-debug-installer", 0, ki18n("Debug symbol installer"),
                      version, ki18n(description), KAboutData::License_GPL,
                      ki18n("(C) 2010 Harald Sitter"), KLocalizedString(), 0,
                      "apachelogger@ubuntu.com");
