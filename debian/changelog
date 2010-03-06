@@ -1,3 +1,9 @@
+kubuntu-debug-installer (10.04ubuntu2) lucid; urgency=low
+
+  * Fix buildd building by adding a missing space after Package:
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Sat, 06 Mar 2010 17:32:32 +0100
+
 kubuntu-debug-installer (10.04ubuntu1) lucid; urgency=low
 
   * Initial release. (LP: #514557)
