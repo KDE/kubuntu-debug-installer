@@ -66,8 +66,8 @@ void DbgInstaller::install()
 
 void DbgInstaller::askMissing()
 {
-    QString msgtext = i18n("For the below listed files no debug packages could"
-                           " be found.\n"
+    QString msgtext = i18n("No debug packages could be found for the files"
+                           " listed below.\n"
                            "Do you want to continue anyway?");
     QString msgcaption = i18n("Couldn't find debug packages");
     int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
@@ -81,7 +81,7 @@ void DbgInstaller::askInstall()
 {
     QString msgtext = i18n("Do you want to install the following debug packages"
                            " so that the necessary debug symbols become available?");
-    QString msgcaption = i18n("Do you want to install the debug packages?");
+    QString msgcaption = i18n("Confirm package installation");
     int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
                                              msgcaption);
     if(ret != KMessageBox::Yes) {
@@ -120,7 +120,7 @@ void DbgInstaller::foundNoDbgPkg(QString file)
 
 void DbgInstaller::run()
 {
-    setLabelText(i18n("Looking up debug packages"));
+    setLabelText(i18n("Looking for debug packages"));
 
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
