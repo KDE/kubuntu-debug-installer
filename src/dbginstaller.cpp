@@ -33,6 +33,13 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
     m_nodbgpkgs(new QStringList())
 {
     setWindowIcon(KIcon("kbugbuster"));
+
+    if (m_args->empty()) {
+        KMessageBox::error(this, i18n("No file paths were provided, so no debug"
+                                      " packages can be found."),
+                           i18n("Can't lookup debug packages"));
+        exit(ERR_RANDOM_ERR);
+    }
 }
 
 DbgInstaller::~DbgInstaller()

@@ -53,12 +53,6 @@ int main(int argc, char **argv)
     }
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (args->count() == 0) {
-        KMessageBox::error(0, i18n("No file paths were provided, so no debug"
-                                    " packages can be found."),
-                           i18n("Can't lookup debug packages"));
-        exit(ERR_RANDOM_ERR);
-    }
 
     QStringList *arglist = new QStringList();
     for(int i = 0; i < args->count(); i++) {
