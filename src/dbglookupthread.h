@@ -27,7 +27,7 @@ class DbgLookupThread : public QThread
 {
     Q_OBJECT
 public:
-    DbgLookupThread(QObject *parent = 0, QStringList *files = NULL);
+    explicit DbgLookupThread(QObject *parent = 0, QStringList *files = NULL);
     void run();
 
 private:
