@@ -52,11 +52,11 @@ DbgInstaller::~DbgInstaller()
 
 void DbgInstaller::install()
 {
-    hide();
     QProcess *install = new QProcess(this);
-    install->start(QString("kdesudo -- install-package --install %1")
-                   .arg(m_dbgpkgs->join(" ")));
-    install->waitForFinished();
+    install->start(QString("kpackagekit --nofork --install-package-name %1")
+                   .arg(m_dbgpkgs->join(" --install-package-name ")));
+    // use blocking function since we do not show any UI
+    install->waitForFinished(-1);
     if(install->exitCode() != 0) {
         exit(ERR_RANDOM_ERR);
     }
