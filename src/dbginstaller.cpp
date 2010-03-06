@@ -25,18 +25,14 @@
 #include <QProcess>
 #include <QProgressBar>
 
-DbgInstaller::DbgInstaller(KProgressDialog *parent, QStringList *args) :
-    KProgressDialog(parent),
+DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
+                           QStringList *args) :
+    KProgressDialog(parent, caption),
     m_args(args),
     m_dbgpkgs(new QStringList()),
     m_nodbgpkgs(new QStringList())
 {
     setWindowIcon(KIcon("kbugbuster"));
-
-    connect(this, SIGNAL(invokeRun()), this, SLOT(run()));
-
-    show();
-    emit invokeRun();
 }
 
 DbgInstaller::~DbgInstaller()
@@ -116,9 +112,11 @@ void DbgInstaller::foundNoDbgPkg(QString file)
 
 void DbgInstaller::run()
 {
-    setLabelText(i18n("Looking up packages"));
+    setLabelText(i18n("Looking up debug packages"));
+
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
+
     DbgLookupThread *t = new DbgLookupThread(this, m_args);
     connect(t, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
     connect(t, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));

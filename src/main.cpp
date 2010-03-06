@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->count() == 0) {
-      KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Move off my lawn!!!!"),
+      KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Get off my lawn!!!!"),
                          i18n("No args makes me shrug"));
       exit(ERR_RANDOM_ERR);
     }
@@ -66,8 +66,9 @@ int main(int argc, char **argv)
 
     args->clear();
 
-    DbgInstaller *installer = new DbgInstaller(0, arglist);
-    installer->setWindowTitle(about.programName());
+    DbgInstaller *installer = new DbgInstaller(0, about.programName(), arglist);
+    installer->show();
+    installer->run();
 
     return app.exec();
 }

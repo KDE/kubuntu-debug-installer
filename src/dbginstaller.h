@@ -33,8 +33,10 @@
 class DbgInstaller : public KProgressDialog {
     Q_OBJECT
 public:
-    DbgInstaller(KProgressDialog *parent = 0, QStringList *args = 0);
+    DbgInstaller(KProgressDialog *parent = 0, QString caption = "",
+                 QStringList *args = 0);
     ~DbgInstaller();
+    void run();
 
 private:
     void install();
@@ -46,11 +48,7 @@ private:
     QStringList *m_dbgpkgs;
     QStringList *m_nodbgpkgs;
 
-signals:
-    void invokeRun();
-
 private slots:
-    void run();
     void foundDbgPkg(QString);
     void foundNoDbgPkg(QString);
 
