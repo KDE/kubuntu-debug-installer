@@ -10,7 +10,7 @@ Vcs-Bzr: https://code.launchpad.net/~kubuntu-members/kubuntu-debug-installer/tru
 
 Package: kubuntu-debug-installer
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, install-package
+Depends: ${shlibs:Depends}, ${misc:Depends}, kpackagekit
 Description: Debug package installer for Kubuntu
  This installer permits drkonqi, KDE's automatic backtrace and bug report
  utility to try find and install missing debug symbols, so that backtraces

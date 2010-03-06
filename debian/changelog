@@ -1,4 +1,4 @@
-kubuntu-debug-installer (10.04ubuntu1) UNRELEASED; urgency=low
+kubuntu-debug-installer (10.04ubuntu1) lucid; urgency=low
 
   * Initial release. (LP: #514557)
 
