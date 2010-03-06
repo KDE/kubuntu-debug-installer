@@ -31,7 +31,7 @@ QString DbgLookupThread::getPkgName(QString file)
 {
     QProcess *query = new QProcess();
     query->start("dpkg-query", QStringList() << "-S" << file);
-    query->waitForFinished();
+    query->waitForFinished(-1);
     return query->readAll().split(':')[0]; // really only return first hit?
 }
 
@@ -39,7 +39,7 @@ QString DbgLookupThread::getSrcPkg(QString pkg)
 {
     QProcess *query = new QProcess();
     query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
-    query->waitForFinished();
+    query->waitForFinished(-1);
     return query->readAll();
 }
 
@@ -54,13 +54,13 @@ QString DbgLookupThread::getDebPkg(QString pkg)
     QProcess *query = new QProcess();
 
     query->start(QString("apt-cache show %1-dbg").arg(pkg));
-    query->waitForFinished();
+    query->waitForFinished(-1);
     if (query->exitCode() == 0) {
         return QString("%1-dbg").arg(pkg);
     }
 
     query->start(QString("apt-cache show %1-dbgsym").arg(pkg));
-    query->waitForFinished();
+    query->waitForFinished(-1);
     if (query->exitCode() == 0) {
         return QString("%1-dbgsym").arg(pkg);
     }
