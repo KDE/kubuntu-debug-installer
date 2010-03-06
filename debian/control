@@ -16,7 +16,7 @@ Description: Debug package installer for Kubuntu
  utility to try find and install missing debug symbols, so that backtraces
  become more useful.
 
-Package:kubuntu-debug-installer
+Package:kubuntu-debug-installer-dbg
 Section: debug
 Architecture: any
 Priority: extra
