@@ -1,0 +1,30 @@
+Source: kubuntu-debug-installer
+Section: kde
+Priority: optional
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Build-Depends: debhelper (>= 7.3.16), pkg-kde-tools (>= 0.5.0), kdelibs5-dev
+Standards-Version: 3.8.4
+Homepage: https://www.launchpad.net/kubuntu-debug-installer
+Vcs-Browser: http://bazaar.launchpad.net/~kubuntu-members/kubuntu-debug-installer/trunk
+Vcs-Bzr: https://code.launchpad.net/~kubuntu-members/kubuntu-debug-installer/trunk
+
+Package: kubuntu-debug-installer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, install-package
+Description: Debug package installer for Kubuntu
+ This installer permits drkonqi, KDE's automatic backtrace and bug report
+ utility to try find and install missing debug symbols, so that backtraces
+ become more useful.
+
+Package:kubuntu-debug-installer
+Section: debug
+Architecture: any
+Priority: extra
+Depends: ${misc:Depends}, kubuntu-debug-installer (= ${binary:Version})
+Recommends: kdelibs5-dbg
+Description: Debug package installer for Kubuntu - debug symbols
+ This installer permits drkonqi, KDE's automatic backtrace and bug report
+ utility to try find and install missing debug symbols, so that backtraces
+ become more useful.
+ .
+ This package only contains the debug symbols.

@@ -1,0 +1,5 @@
+kubuntu-debug-installer (10.04ubuntu1) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Sat, 06 Mar 2010 01:57:39 +0100
