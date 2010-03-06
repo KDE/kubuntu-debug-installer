@@ -21,9 +21,6 @@
 #ifndef DBGINSTALLER_H
 #define DBGINSTALLER_H
 
-#include <KCmdLineArgs>
-#include <KDebug>
-
 #include <KProgressDialog>
 
 #define ERR_RANDOM_ERR 1

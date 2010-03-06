@@ -24,7 +24,6 @@
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KLocale>
-#include <KMessageBox>
 
 static const char description[] =
         I18N_NOOP("A debug package installer for Kubuntu");

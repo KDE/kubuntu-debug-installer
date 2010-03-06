@@ -20,7 +20,6 @@
 
 #include "dbglookupthread.h"
 
-#include <KDebug>
 #include <QProcess>
 
 DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :

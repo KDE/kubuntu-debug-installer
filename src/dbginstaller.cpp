@@ -23,7 +23,6 @@
 
 #include <KMessageBox>
 #include <QProcess>
-#include <QProgressBar>
 
 DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
                            QStringList *args) :
