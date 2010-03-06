@@ -27,13 +27,13 @@
 #include <KMessageBox>
 
 static const char description[] =
-    I18N_NOOP("A debug symbol installer for KDE");
+        I18N_NOOP("A debug package installer for Kubuntu");
 
 static const char version[] = "0.1";
 
 int main(int argc, char **argv)
 {
-    KAboutData about("kubuntu-debug-installer", 0, ki18n("Debug symbol installer"),
+    KAboutData about("kubuntu-debug-installer", 0, ki18n("Debug package installer"),
                      version, ki18n(description), KAboutData::License_GPL,
                      ki18n("(C) 2010 Harald Sitter"), KLocalizedString(), 0,
                      "apachelogger@ubuntu.com");
@@ -42,26 +42,27 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add("+[FILES]", ki18n( "Files to find debug symbols for" ));
+    options.add("+[FILES]", ki18n( "Files to find debug packages for" ));
     KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
     // do not restore!
     if (app.isSessionRestored()) {
-      exit(0);
+        exit(0);
     }
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->count() == 0) {
-      KMessageBox::error(0, i18n("Seriously now, stop messing with me, no args = no service. Get off my lawn!!!!"),
-                         i18n("No args makes me shrug"));
-      exit(ERR_RANDOM_ERR);
+        KMessageBox::error(0, i18n("No file paths were provided, so no debug"
+                                    " packages can be found."),
+                           i18n("Can't lookup debug packages"));
+        exit(ERR_RANDOM_ERR);
     }
 
     QStringList *arglist = new QStringList();
     for(int i = 0; i < args->count(); i++) {
-       arglist->append(args->arg(i));
+        arglist->append(args->arg(i));
     }
 
     args->clear();

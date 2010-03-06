@@ -60,10 +60,10 @@ void DbgInstaller::install()
 
 void DbgInstaller::askMissing()
 {
-    QString msgtext = i18n("I'm in ur repos, stealin ur dbg pacKagez."
-                           " No newline for u! And no white space either"
-                           "Do you want me to search anywayz?");
-    QString msgcaption = i18n("Aint no debug packages");
+    QString msgtext = i18n("For the below listed files no debug packages could"
+                           " be found.\n"
+                           "Do you want to continue anyway?");
+    QString msgcaption = i18n("Couldn't find debug packages");
     int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
                                             msgcaption);
     if (ret != KMessageBox::Yes) {
@@ -73,8 +73,8 @@ void DbgInstaller::askMissing()
 
 void DbgInstaller::askInstall()
 {
-    QString msgtext = i18n("Do you want to allow this wonderful application to"
-                           " install below listed packages?");
+    QString msgtext = i18n("Do you want to install the following debug packages"
+                           " so that the necessary debug symbols become available?");
     QString msgcaption = i18n("Do you want to install the debug packages?");
     int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
                                              msgcaption);
@@ -89,8 +89,10 @@ void DbgInstaller::incrementProgress()
 {
     progressBar()->setValue(progressBar()->value()+1);
     if (progressBar()->value() == progressBar()->maximum()) {
-        if (!m_nodbgpkgs->empty()) {
+        if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
             askMissing();
+        } else if (m_dbgpkgs->empty()) {
+            exit(ERR_NO_SYMBOLS);
         }
         askInstall();
     }
