@@ -71,7 +71,9 @@ void DbgInstaller::askMissing()
                            "Do you want to continue anyway?");
     QString msgcaption = i18n("Couldn't find debug packages");
     int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
-                                            msgcaption);
+                                            msgcaption,
+                                            KGuiItem(i18n("Continue"), "dialog-ok"),
+                                            KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
         exit(ERR_NO_SYMBOLS);
     }
@@ -83,7 +85,9 @@ void DbgInstaller::askInstall()
                            " so that the necessary debug symbols become available?");
     QString msgcaption = i18n("Confirm package installation");
     int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
-                                             msgcaption);
+                                             msgcaption,
+                                             KGuiItem(i18n("Install"), "dialog-ok"),
+                                             KStandardGuiItem::cancel());
     if(ret != KMessageBox::Yes) {
         exit(ERR_CANCEL);
     }
