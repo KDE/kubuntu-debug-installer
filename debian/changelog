@@ -1,9 +1,13 @@
-kubuntu-debug-installer (10.04ubuntu3) UNRELEASED; urgency=low
+kubuntu-debug-installer (10.04ubuntu3) lucid; urgency=low
 
   [ Aurélien Gâteau ]
   * Change Yes buttons in messagesboxes to Install and Continue
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Wed, 10 Mar 2010 12:31:53 +0100
+  [ Harald Sitter ]
+  * Prevent dialogs from appearing when there are no dbg packages found at
+    all (using function checkListEmpty which exits the app on empty list)
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Wed, 10 Mar 2010 15:02:12 +0100
 
 kubuntu-debug-installer (10.04ubuntu2) lucid; urgency=low
 

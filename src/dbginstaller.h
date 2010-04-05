@@ -39,6 +39,7 @@ private:
     void install();
     void askMissing();
     void askInstall();
+    void checkListEmpty();
     void incrementProgress();
 
     QStringList *m_args;

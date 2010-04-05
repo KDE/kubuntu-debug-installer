@@ -66,6 +66,7 @@ void DbgInstaller::install()
 
 void DbgInstaller::askMissing()
 {
+    checkListEmpty();
     QString msgtext = i18n("No debug packages could be found for the files"
                            " listed below.\n"
                            "Do you want to continue anyway?");
@@ -81,6 +82,7 @@ void DbgInstaller::askMissing()
 
 void DbgInstaller::askInstall()
 {
+    checkListEmpty();
     QString msgtext = i18n("Do you want to install the following debug packages"
                            " so that the necessary debug symbols become available?");
     QString msgcaption = i18n("Confirm package installation");
@@ -93,6 +95,15 @@ void DbgInstaller::askInstall()
     }
 
     install();
+}
+
+void DbgInstaller::checkListEmpty()
+{
+    if (!m_dbgpkgs->isEmpty()) {
+        return;
+    }
+
+    exit(ERR_NO_SYMBOLS);
 }
 
 void DbgInstaller::incrementProgress()
