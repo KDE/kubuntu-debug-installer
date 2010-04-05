@@ -54,18 +54,18 @@ QString DbgLookupThread::getDebPkg(QString pkg)
 
     QProcess *query = new QProcess();
 
-    query->start(QString("apt-cache show %1-dbg").arg(pkg));
-    query->waitForFinished(-1);
-    if (query->exitCode() == 0 &&
-        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(pkg)) ) {
-          return QString("%1-dbg").arg(pkg);
-    }
-
     query->start(QString("apt-cache show %1-dbgsym").arg(pkg));
     query->waitForFinished(-1);
     if (query->exitCode() == 0 &&
         !QFile::exists(QString("/var/lib/dpkg/info/%1-dbgsym.list").arg(pkg))) {
           return QString("%1-dbgsym").arg(pkg);
+    }
+
+    query->start(QString("apt-cache show %1-dbg").arg(pkg));
+    query->waitForFinished(-1);
+    if (query->exitCode() == 0 &&
+        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(pkg)) ) {
+          return QString("%1-dbg").arg(pkg);
     }
 
     return "";
