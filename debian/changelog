@@ -1,3 +1,9 @@
+kubuntu-debug-installer (10.04ubuntu4) UNRELEASED; urgency=low
+
+  * Don't offer installation of already installed packages (LP: #538543)
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Tue, 06 Apr 2010 00:17:59 +0200
+
 kubuntu-debug-installer (10.04ubuntu3) lucid; urgency=low
 
   [ Aurélien Gâteau ]
