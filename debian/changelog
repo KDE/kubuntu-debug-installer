@@ -1,4 +1,4 @@
-kubuntu-debug-installer (10.04ubuntu4) UNRELEASED; urgency=low
+kubuntu-debug-installer (10.04ubuntu4) lucid; urgency=low
 
   * Don't offer installation of already installed packages (LP: #538543)
   * Changer lookup order (dbgsym first, dbg last). This way the user does not
