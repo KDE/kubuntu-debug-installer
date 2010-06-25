@@ -76,12 +76,11 @@ QString DbgLookupThread::getDebPkg(const QString &pkg)
 
 void DbgLookupThread::run()
 {
-    int i=0;
-    for(; i < m_files->count(); i++) {
+    foreach (const QString &file, *m_files) {
         QString pkg;
         QString dbgpkg;
 
-        pkg = getPkgName(m_files->at(i));
+        pkg = getPkgName(file);
         dbgpkg = getDebPkg(pkg);
 
         if (dbgpkg.isEmpty()) {
@@ -90,7 +89,7 @@ void DbgLookupThread::run()
         }
 
         if (dbgpkg.isEmpty()) {
-            emit foundNoDbgPkg(m_files->at(i));
+            emit foundNoDbgPkg(file);
         } else {
             emit foundDbgPkg(dbgpkg);
         }
