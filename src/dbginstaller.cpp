@@ -53,12 +53,12 @@ DbgInstaller::~DbgInstaller()
 
 void DbgInstaller::install()
 {
-    QProcess *install = new QProcess(this);
-    install->start(QString("kpackagekit --nofork --install-package-name %1")
+    QProcess install;
+    install.start(QString("kpackagekit --nofork --install-package-name %1")
                    .arg(m_dbgpkgs->join(" --install-package-name ")));
     // use blocking function since we do not show any UI
-    install->waitForFinished(-1);
-    if(install->exitCode() != 0) {
+    install.waitForFinished(-1);
+    if(install.exitCode() != 0) {
         exit(ERR_RANDOM_ERR);
     }
 
@@ -99,7 +99,7 @@ void DbgInstaller::askInstall()
     install();
 }
 
-void DbgInstaller::checkListEmpty()
+void DbgInstaller::checkListEmpty() const
 {
     if (!m_dbgpkgs->isEmpty()) {
         return;
