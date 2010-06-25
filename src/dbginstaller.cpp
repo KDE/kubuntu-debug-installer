@@ -43,11 +43,11 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
 
 DbgInstaller::~DbgInstaller()
 {
+    delete m_dbgpkgs;
+    delete m_nodbgpkgs;
     if (wasCancelled()) {
         exit(ERR_CANCEL);
     }
-    delete m_dbgpkgs;
-    delete m_nodbgpkgs;
 }
 
 void DbgInstaller::install()
