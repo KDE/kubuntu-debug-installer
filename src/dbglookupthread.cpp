@@ -30,18 +30,18 @@ DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
 
 QString DbgLookupThread::getPkgName(QString file)
 {
-    QProcess *query = new QProcess();
-    query->start("dpkg-query", QStringList() << "-S" << file);
-    query->waitForFinished(-1);
-    return query->readAll().split(':')[0]; // really only return first hit?
+    QProcess query;
+    query.start("dpkg-query", QStringList() << "-S" << file);
+    query.waitForFinished(-1);
+    return query.readAll().split(':')[0]; // really only return first hit?
 }
 
 QString DbgLookupThread::getSrcPkg(QString pkg)
 {
-    QProcess *query = new QProcess();
-    query->start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
-    query->waitForFinished(-1);
-    return query->readAll();
+    QProcess query;
+    query.start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
+    query.waitForFinished(-1);
+    return query.readAll();
 }
 
 QString DbgLookupThread::getDebPkg(QString pkg)
@@ -52,18 +52,18 @@ QString DbgLookupThread::getDebPkg(QString pkg)
         pkg = "libqt4";
     }
 
-    QProcess *query = new QProcess();
+    QProcess query;
 
-    query->start(QString("apt-cache show %1-dbgsym").arg(pkg));
-    query->waitForFinished(-1);
-    if (query->exitCode() == 0 &&
+    query.start(QString("apt-cache show %1-dbgsym").arg(pkg));
+    query.waitForFinished(-1);
+    if (query.exitCode() == 0 &&
         !QFile::exists(QString("/var/lib/dpkg/info/%1-dbgsym.list").arg(pkg))) {
           return QString("%1-dbgsym").arg(pkg);
     }
 
-    query->start(QString("apt-cache show %1-dbg").arg(pkg));
-    query->waitForFinished(-1);
-    if (query->exitCode() == 0 &&
+    query.start(QString("apt-cache show %1-dbg").arg(pkg));
+    query.waitForFinished(-1);
+    if (query.exitCode() == 0 &&
         !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(pkg)) ) {
           return QString("%1-dbg").arg(pkg);
     }
