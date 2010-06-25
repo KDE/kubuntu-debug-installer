@@ -61,7 +61,7 @@ void DbgInstaller::install()
                    .arg(m_dbgpkgs->join(" --install-package-name ")));
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
-    if(install.exitCode() != 0) {
+    if (install.exitCode() != 0) {
         exit(ERR_RANDOM_ERR);
     }
 
@@ -95,7 +95,7 @@ void DbgInstaller::askInstall()
                                              KGuiItem(i18nc("@action:button", "Install"),
                                                       "dialog-ok"),
                                              KStandardGuiItem::cancel());
-    if(ret != KMessageBox::Yes) {
+    if (ret != KMessageBox::Yes) {
         exit(ERR_CANCEL);
     }
 
@@ -113,7 +113,7 @@ void DbgInstaller::checkListEmpty() const
 
 void DbgInstaller::incrementProgress()
 {
-    progressBar()->setValue(progressBar()->value()+1);
+    progressBar()->setValue(progressBar()->value() + 1);
     if (progressBar()->value() == progressBar()->maximum()) {
         if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
             askMissing();
