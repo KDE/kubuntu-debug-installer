@@ -21,7 +21,6 @@
 #ifndef DBGLOOKUPTHREAD_H
 #define DBGLOOKUPTHREAD_H
 
-#include <KLocale>
 #include <QThread>
 
 class DbgLookupThread : public QThread

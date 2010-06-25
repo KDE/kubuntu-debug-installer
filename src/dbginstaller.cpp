@@ -19,10 +19,13 @@
  ***************************************************************************/
 
 #include "dbginstaller.h"
-#include "dbglookupthread.h"
 
-#include <KMessageBox>
 #include <QProcess>
+
+#include <KLocale>
+#include <KMessageBox>
+
+#include "dbglookupthread.h"
 
 DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
                            QStringList *args) :

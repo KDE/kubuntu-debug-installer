@@ -23,6 +23,8 @@
 #include <QFile>
 #include <QProcess>
 
+#include <KLocale>
+
 DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
         QThread(parent),
         m_files(files)
