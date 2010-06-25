@@ -71,7 +71,7 @@ QString DbgLookupThread::getDebPkg(const QString &pkg)
           return QString("%1-dbg").arg(srcPkg);
     }
 
-    return "";
+    return QString();
 }
 
 void DbgLookupThread::run()
