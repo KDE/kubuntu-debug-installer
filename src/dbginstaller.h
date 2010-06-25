@@ -30,7 +30,7 @@
 class DbgInstaller : public KProgressDialog {
     Q_OBJECT
 public:
-    explicit DbgInstaller(KProgressDialog *parent = 0, QString caption = "",
+    explicit DbgInstaller(KProgressDialog *parent = 0, const QString &caption = "",
                           QStringList *args = 0);
     ~DbgInstaller();
     void run();

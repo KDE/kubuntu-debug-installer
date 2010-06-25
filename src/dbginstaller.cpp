@@ -27,7 +27,7 @@
 
 #include "dbglookupthread.h"
 
-DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
+DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
     KProgressDialog(parent, caption),
     m_args(args),
