@@ -32,9 +32,9 @@ public:
     void run();
 
 private:
-    QString getPkgName(QString);
-    QString getSrcPkg(QString);
-    QString getDebPkg(QString);
+    static QString getPkgName(const QString &file);
+    static QString getSrcPkg(const QString &pkg);
+    static QString getDebPkg(const QString &pkg);
 
     QStringList *m_files;
 

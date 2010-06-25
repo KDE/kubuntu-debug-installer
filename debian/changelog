@@ -3,8 +3,10 @@ kubuntu-debug-installer (10.10ubuntu2) UNRELEASED; urgency=low
   * Reduce heap usage
   * Properly destruct dbginstaller
   * Provide context for translatable strings
+  * Function calls with const QString references
+  * Mark static functions as such
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Fri, 25 Jun 2010 12:39:50 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Fri, 25 Jun 2010 12:50:11 +0200
 
 kubuntu-debug-installer (10.10ubuntu1) maverick; urgency=low
 

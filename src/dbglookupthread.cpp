@@ -28,7 +28,7 @@ DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
         m_files(files)
 {}
 
-QString DbgLookupThread::getPkgName(QString file)
+QString DbgLookupThread::getPkgName(const QString &file)
 {
     QProcess query;
     query.start("dpkg-query", QStringList() << "-S" << file);
@@ -36,7 +36,7 @@ QString DbgLookupThread::getPkgName(QString file)
     return query.readAll().split(':')[0]; // really only return first hit?
 }
 
-QString DbgLookupThread::getSrcPkg(QString pkg)
+QString DbgLookupThread::getSrcPkg(const QString &pkg)
 {
     QProcess query;
     query.start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
@@ -44,28 +44,31 @@ QString DbgLookupThread::getSrcPkg(QString pkg)
     return query.readAll();
 }
 
-QString DbgLookupThread::getDebPkg(QString pkg)
+QString DbgLookupThread::getDebPkg(const QString &pkg)
 {
+    QString srcPkg;
     // TODO: map packages names for Qt
     if (pkg.contains("qt4-x11"))
     {
-        pkg = "libqt4";
+        srcPkg = "libqt4";
+    } else {
+        srcPkg = pkg;
     }
 
     QProcess query;
 
-    query.start(QString("apt-cache show %1-dbgsym").arg(pkg));
+    query.start(QString("apt-cache show %1-dbgsym").arg(srcPkg));
     query.waitForFinished(-1);
     if (query.exitCode() == 0 &&
-        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbgsym.list").arg(pkg))) {
-          return QString("%1-dbgsym").arg(pkg);
+        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbgsym.list").arg(srcPkg))) {
+          return QString("%1-dbgsym").arg(srcPkg);
     }
 
-    query.start(QString("apt-cache show %1-dbg").arg(pkg));
+    query.start(QString("apt-cache show %1-dbg").arg(srcPkg));
     query.waitForFinished(-1);
     if (query.exitCode() == 0 &&
-        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(pkg)) ) {
-          return QString("%1-dbg").arg(pkg);
+        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(srcPkg)) ) {
+          return QString("%1-dbg").arg(srcPkg);
     }
 
     return "";
