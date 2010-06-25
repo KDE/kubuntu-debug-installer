@@ -34,9 +34,10 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, QString caption,
     setWindowIcon(KIcon("kbugbuster"));
 
     if (m_args->empty()) {
-        KMessageBox::error(this, i18n("No file paths were provided, so no debug"
-                                      " packages can be found."),
-                           i18n("Can't lookup debug packages"));
+        KMessageBox::error(this, i18nc("@info Error message", "No file paths"
+                                       " were provided, so no debug"
+                                       " packages can be found."),
+                           i18nc("@title:window", "Can't lookup debug packages"));
         exit(ERR_RANDOM_ERR);
     }
 }
@@ -67,10 +68,10 @@ void DbgInstaller::install()
 void DbgInstaller::askMissing()
 {
     checkListEmpty();
-    QString msgtext = i18n("No debug packages could be found for the files"
+    QString msgtext = i18nc("@info", "No debug packages could be found for the files"
                            " listed below.\n"
                            "Do you want to continue anyway?");
-    QString msgcaption = i18n("Couldn't find debug packages");
+    QString msgcaption = i18nc("@title:window", "Couldn't find debug packages");
     int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
                                             msgcaption,
                                             KStandardGuiItem::cont(),
@@ -83,12 +84,13 @@ void DbgInstaller::askMissing()
 void DbgInstaller::askInstall()
 {
     checkListEmpty();
-    QString msgtext = i18n("Do you want to install the following debug packages"
+    QString msgtext = i18nc("@info", "Do you want to install the following debug packages"
                            " so that the necessary debug symbols become available?");
-    QString msgcaption = i18n("Confirm package installation");
+    QString msgcaption = i18nc("@title:window", "Confirm package installation");
     int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
                                              msgcaption,
-                                             KGuiItem(i18n("Install"), "dialog-ok"),
+                                             KGuiItem(i18nc("@action:button", "Install"),
+                                                      "dialog-ok"),
                                              KStandardGuiItem::cancel());
     if(ret != KMessageBox::Yes) {
         exit(ERR_CANCEL);
@@ -135,7 +137,7 @@ void DbgInstaller::foundNoDbgPkg(QString file)
 
 void DbgInstaller::run()
 {
-    setLabelText(i18n("Looking for debug packages"));
+    setLabelText(i18nc("@info:progress", "Looking for debug packages"));
 
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
