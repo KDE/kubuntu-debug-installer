@@ -10,6 +10,9 @@ kubuntu-debug-installer (10.10ubuntu2) UNRELEASED; urgency=low
   [ Jonathan Thomas ]
   * Port kubuntu-debug-installer from install-package to qapt-batch.
   * Replace the dependency on install-package with one on qapt-batch
+  * Use LibQApt to search for the -dbg package corresponding to the missing
+    symbols
+  * Add a build-dependency on libqapt-dev
   * Fix punctuation in the long description
   * Bump Standards-Version to 3.9.0, no changes required
 

@@ -20,57 +20,37 @@
 
 #include "dbglookupthread.h"
 
-#include <QFile>
-#include <QProcess>
+#include <QtCore/QStringList>
 
-#include <KLocale>
+// LibQApt includes
+#include <libqapt/backend.h>
 
 DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
         QThread(parent),
+        m_backend(0),
         m_files(files)
-{}
-
-QString DbgLookupThread::getPkgName(const QString &file)
 {
-    QProcess query;
-    query.start("dpkg-query", QStringList() << "-S" << file);
-    query.waitForFinished(-1);
-    return query.readAll().split(':')[0]; // really only return first hit?
 }
 
-QString DbgLookupThread::getSrcPkg(const QString &pkg)
-{
-    QProcess query;
-    query.start("dpkg-query", QStringList() << "-W" << "-f=${Source}" << pkg);
-    query.waitForFinished(-1);
-    return query.readAll();
-}
-
-QString DbgLookupThread::getDebPkg(const QString &pkg)
+QString DbgLookupThread::getDebPkg(QApt::Package *package)
 {
     QString srcPkg;
     // TODO: map packages names for Qt
-    if (pkg.contains("qt4-x11"))
+    if (package->sourcePackage() == "qt4-x11")
     {
         srcPkg = "libqt4";
     } else {
-        srcPkg = pkg;
+        srcPkg = package->sourcePackage();
     }
 
-    QProcess query;
-
-    query.start(QString("apt-cache show %1-dbgsym").arg(srcPkg));
-    query.waitForFinished(-1);
-    if (query.exitCode() == 0 &&
-        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbgsym.list").arg(srcPkg))) {
-          return QString("%1-dbgsym").arg(srcPkg);
+    QString dbgsymPackage(srcPkg + "-dbgsym");
+    if (m_backend->package(dbgsymPackage)) {
+        return dbgsymPackage;
     }
 
-    query.start(QString("apt-cache show %1-dbg").arg(srcPkg));
-    query.waitForFinished(-1);
-    if (query.exitCode() == 0 &&
-        !QFile::exists(QString("/var/lib/dpkg/info/%1-dbg.list").arg(srcPkg)) ) {
-          return QString("%1-dbg").arg(srcPkg);
+    QString dbgPackage(srcPkg + "-dbg");
+    if (m_backend->package(dbgPackage)) {
+        return dbgPackage;
     }
 
     return QString();
@@ -78,17 +58,12 @@ QString DbgLookupThread::getDebPkg(const QString &pkg)
 
 void DbgLookupThread::run()
 {
+    m_backend = new QApt::Backend;
+    m_backend->init();
+
     foreach (const QString &file, *m_files) {
-        QString pkg;
-        QString dbgpkg;
-
-        pkg = getPkgName(file);
-        dbgpkg = getDebPkg(pkg);
-
-        if (dbgpkg.isEmpty()) {
-            QString srcpkg = getSrcPkg(pkg);
-            dbgpkg = getDebPkg(srcpkg);
-        }
+        QApt::Package *package = m_backend->packageForFile(file);
+        QString dbgpkg = getDebPkg(package);
 
         if (dbgpkg.isEmpty()) {
             emit foundNoDbgPkg(file);

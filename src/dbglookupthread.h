@@ -23,6 +23,11 @@
 
 #include <QThread>
 
+namespace QApt {
+    class Backend;
+    class Package;
+}
+
 class DbgLookupThread : public QThread
 {
     Q_OBJECT
@@ -31,10 +36,9 @@ public:
     void run();
 
 private:
-    static QString getPkgName(const QString &file);
-    static QString getSrcPkg(const QString &pkg);
-    static QString getDebPkg(const QString &pkg);
+    QString getDebPkg(QApt::Package *package);
 
+    QApt::Backend *m_backend;
     QStringList *m_files;
 
 signals:
