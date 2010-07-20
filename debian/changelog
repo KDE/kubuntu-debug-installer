@@ -1,10 +1,17 @@
 kubuntu-debug-installer (10.10ubuntu2) UNRELEASED; urgency=low
 
+  [ Harald Sitter ]
   * Reduce heap usage
   * Properly destruct dbginstaller
   * Provide context for translatable strings
   * Function calls with const QString references
   * Mark static functions as such
+
+  [ Jonathan Thomas ]
+  * Port kubuntu-debug-installer from install-package to qapt-batch.
+  * Replace the dependency on install-package with one on qapt-batch
+  * Fix punctuation in the long description
+  * Bump Standards-Version to 3.9.0, no changes required
 
  -- Harald Sitter <apachelogger@ubuntu.com>  Fri, 25 Jun 2010 12:50:11 +0200
 

@@ -57,8 +57,8 @@ DbgInstaller::~DbgInstaller()
 void DbgInstaller::install()
 {
     QProcess install;
-    install.start(QString("kpackagekit --nofork --install-package-name %1")
-                   .arg(m_dbgpkgs->join(" --install-package-name ")));
+    install.start(QString("/usr/bin/qapt-batch --install %1")
+                   .arg(m_dbgpkgs->join(QString(' '))));
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
     if (install.exitCode() != 0) {
