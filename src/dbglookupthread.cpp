@@ -72,5 +72,6 @@ void DbgLookupThread::run()
         }
     }
 
+    m_backend->deleteLater();
     exec();
 }
