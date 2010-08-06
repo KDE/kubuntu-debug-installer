@@ -1,4 +1,4 @@
-kubuntu-debug-installer (10.10ubuntu2) UNRELEASED; urgency=low
+kubuntu-debug-installer (10.10ubuntu2) maverick; urgency=low
 
   [ Harald Sitter ]
   * Reduce heap usage
