@@ -1,3 +1,10 @@
+kubuntu-debug-installer (10.10ubuntu3) maverick; urgency=low
+
+  * Only get the dbg package if the package we're looking up isn't null
+    (LP: #614657)
+
+ -- Jonathan Thomas <echidnaman@kubuntu.org>  Sun, 08 Aug 2010 21:01:02 -0400
+
 kubuntu-debug-installer (10.10ubuntu2) maverick; urgency=low
 
   [ Harald Sitter ]

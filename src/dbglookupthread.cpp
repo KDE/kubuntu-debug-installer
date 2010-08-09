@@ -63,7 +63,11 @@ void DbgLookupThread::run()
 
     foreach (const QString &file, *m_files) {
         QApt::Package *package = m_backend->packageForFile(file);
-        QString dbgpkg = getDebPkg(package);
+
+        QString dbgpkg;
+        if (package) {
+            dbgpkg = getDebPkg(package);
+        }
 
         if (dbgpkg.isEmpty()) {
             emit foundNoDbgPkg(file);
