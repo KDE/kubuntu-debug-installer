@@ -1,3 +1,9 @@
+kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
+
+  * Rebuild for libqapt0 -> libqapt1 transition
+
+ -- Jonathan Thomas <echidnaman@kubuntu.org>  Fri, 13 Aug 2010 13:34:37 -0400
+
 kubuntu-debug-installer (10.10ubuntu3) maverick; urgency=low
 
   * Only get the dbg package if the package we're looking up isn't null
