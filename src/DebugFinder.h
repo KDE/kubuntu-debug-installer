@@ -38,6 +38,7 @@ public:
     ~DebugFinder();
 
 public slots:
+    void find(const QString &file);
     void find();
 
 signals:

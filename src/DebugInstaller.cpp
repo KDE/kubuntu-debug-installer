@@ -175,5 +175,8 @@ void DebugInstaller::run()
     m_finder->moveToThread(m_finderThread);
     m_finderThread->start();
 
-    QTimer::singleShot(0, m_finder, SLOT(find()));
+    foreach (const QString &file, *m_args) {
+        QMetaObject::invokeMethod(m_finder, "find", Qt::QueuedConnection,
+                                  Q_ARG(QString, file));
+    }
 }

@@ -69,19 +69,24 @@ QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
     return 0;
 }
 
+void DebugFinder::find(const QString &file)
+{
+    QApt::Package *package = m_backend->packageForFile(file);
+
+     QApt::Package *dbgPkg = getDebPkg(package);
+     if (!dbgPkg) {
+         emit foundNoDbgPkg(file);
+     } else if (dbgPkg->isInstalled()) {
+         emit alreadyInstalled();
+     } else {
+         emit foundDbgPkg(dbgPkg->name());
+     }
+}
+
 void DebugFinder::find()
 {
     foreach (const QString &file, m_files) {
-       QApt::Package *package = m_backend->packageForFile(file);
-
-        QApt::Package *dbgPkg = getDebPkg(package);
-        if (!dbgPkg) {
-            emit foundNoDbgPkg(file);
-        } else if (dbgPkg->isInstalled()) {
-            emit alreadyInstalled();
-        } else {
-            emit foundDbgPkg(dbgPkg->name());
-        }
+        find(file);
     }
     m_backend->deleteLater();
     thread()->quit();
