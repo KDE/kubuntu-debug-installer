@@ -40,6 +40,7 @@ public:
 public slots:
     void find(const QString &file);
     void find();
+    void stop();
 
 signals:
     void foundDbgPkg(const QString &dbgpkg);
@@ -51,6 +52,8 @@ private:
 
     QApt::Backend *m_backend;
     QStringList m_files;
+
+    bool m_stop;
 };
 
 #endif // DEBUGFINDER_H

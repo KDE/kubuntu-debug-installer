@@ -30,7 +30,8 @@
 DebugFinder::DebugFinder(QObject *parent, QStringList *files) :
     QObject(parent),
     m_backend(new QApt::Backend),
-    m_files(QStringList(*files))
+    m_files(QStringList(*files)),
+    m_stop(false)
 {
     m_backend->init();
 }
@@ -71,6 +72,9 @@ QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
 
 void DebugFinder::find(const QString &file)
 {
+    if (m_stop) {
+        return;
+    }
     QApt::Package *package = m_backend->packageForFile(file);
 
      QApt::Package *dbgPkg = getDebPkg(package);
@@ -90,4 +94,9 @@ void DebugFinder::find()
     }
     m_backend->deleteLater();
     thread()->quit();
+}
+
+void DebugFinder::stop()
+{
+    m_stop = true;
 }

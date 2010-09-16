@@ -35,7 +35,7 @@
 // end, hence it is necessary to ensure that the function returns immediately.
 // Also ensure that the finderthread's eventloop gets stopped to prevent
 // crashes from access to implicitly shared QString data.
-#define exit(x) m_finderThread->exit(x); m_finderThread->terminate(); qApp->exit(x); return;
+#define exit(x) m_finder->stop(); m_finderThread->quit(); m_finderThread->wait(); qApp->exit(x); return;
 
 DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
@@ -156,6 +156,7 @@ void DebugInstaller::alreadyInstalled()
 
 void DebugInstaller::reject()
 {
+    KProgressDialog::reject();
     exit(ERR_CANCEL);
 }
 
