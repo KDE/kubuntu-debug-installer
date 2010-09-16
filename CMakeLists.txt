@@ -9,4 +9,15 @@ macro_log_feature(QAPT_FOUND "QApt" "High-level Qt wrapper/Apt implementation ar
 
 include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} )
 
+execute_process(COMMAND src/version.sh
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE VERSION_RESULT
+                OUTPUT_VARIABLE VERSION_STRING
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(NOT VERSION_RESULT EQUAL 0 OR VERSION_STRING STREQUAL "")
+    message(FATAL_ERROR "Could not get version from debian/changelog :'-(")
+endif(NOT VERSION_RESULT EQUAL 0 OR VERSION_STRING STREQUAL "")
+
 add_subdirectory( src )

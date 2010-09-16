@@ -25,10 +25,10 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
+#include "version.h"
+
 static const char description[] =
         I18N_NOOP("A debug package installer for Kubuntu");
-
-static const char version[] = "0.1";
 
 int main(int argc, char **argv)
 {
