@@ -1,5 +1,6 @@
 /*
   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>
+  Copyright © 2010 Jonathan Thomas <echidnaman@kubuntu.org>
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -22,11 +23,18 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QProcess>
+#include <QtCore/QThread>
+#include <QtCore/QTimer>
 
 #include <KLocale>
 #include <KMessageBox>
+#include <KDebug>
 
-#include "dbglookupthread.h"
+#include "DebugFinder.h"
+
+// Because qapp->exit only ends event processing the current function would not
+// end, hence it is necessary to ensure that the function returns immediately.
+#define exit(x) qApp->exit(x); return;
 
 DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
@@ -43,7 +51,7 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
                                        " were provided, so no debug"
                                        " packages can be found."),
                            i18nc("@title:window", "Can't lookup debug packages"));
-        qApp->exit(ERR_RANDOM_ERR);
+        exit(ERR_RANDOM_ERR);
     }
 }
 
@@ -52,7 +60,7 @@ DbgInstaller::~DbgInstaller()
     delete m_dbgpkgs;
     delete m_nodbgpkgs;
     if (wasCancelled()) {
-        qApp->exit(ERR_CANCEL);
+        exit(ERR_CANCEL);
     }
 }
 
@@ -64,7 +72,7 @@ void DbgInstaller::install()
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
     if (install.exitCode() != 0) {
-        qApp->exit(ERR_RANDOM_ERR);
+        exit(ERR_RANDOM_ERR);
     }
 
     close();
@@ -82,7 +90,7 @@ void DbgInstaller::askMissing()
                                             KStandardGuiItem::cont(),
                                             KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        qApp->exit(ERR_NO_SYMBOLS);
+        exit(ERR_NO_SYMBOLS);
     }
 }
 
@@ -98,7 +106,7 @@ void DbgInstaller::askInstall()
                                                       "dialog-ok"),
                                              KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        qApp->exit(ERR_CANCEL);
+        exit(ERR_CANCEL);
     }
 
     install();
@@ -110,7 +118,7 @@ void DbgInstaller::checkListEmpty() const
         return;
     }
 
-    qApp->exit(ERR_NO_SYMBOLS);
+    exit(ERR_NO_SYMBOLS);
 }
 
 void DbgInstaller::incrementProgress()
@@ -120,9 +128,9 @@ void DbgInstaller::incrementProgress()
         if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
             askMissing();
         } else if (m_dbgpkgs->empty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
-            qApp->exit(0);
+            exit(0);
         } else if (m_dbgpkgs->empty()) {
-            qApp->exit(ERR_NO_SYMBOLS);
+            exit(ERR_NO_SYMBOLS);
         }
         askInstall();
     }
@@ -155,9 +163,13 @@ void DbgInstaller::run()
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
 
-    DbgLookupThread *t = new DbgLookupThread(this, m_args);
-    connect(t, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
-    connect(t, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
-    connect(t, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));
-    t->start();
+    DebugFinder *finder = new DebugFinder(0, m_args);
+    connect(finder, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
+    connect(finder, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
+    connect(finder, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));
+
+    QThread *thread = new QThread(this);
+    finder->moveToThread(thread);
+    thread->start();
+    QTimer::singleShot(0, finder, SLOT(find()));
 }

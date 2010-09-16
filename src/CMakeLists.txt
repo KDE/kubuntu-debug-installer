@@ -2,7 +2,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINAR
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(installdbgsymbols_SRCS
-    dbglookupthread.cpp
+    DebugFinder.cpp
     dbginstaller.cpp
     main.cpp
 )

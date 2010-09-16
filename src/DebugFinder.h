@@ -1,5 +1,6 @@
 /*
   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>
+  Copyright © 2010 Jonathan Thomas <echidnaman@kubuntu.org>
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -21,30 +22,34 @@
 #ifndef DBGLOOKUPTHREAD_H
 #define DBGLOOKUPTHREAD_H
 
-#include <QtCore/QThread>
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 namespace QApt {
     class Backend;
     class Package;
 }
 
-class DbgLookupThread : public QThread
+class DebugFinder : public QObject
 {
     Q_OBJECT
 public:
-    explicit DbgLookupThread(QObject *parent = 0, QStringList *files = 0);
-    void run();
+    explicit DebugFinder(QObject *parent = 0, QStringList *files = 0);
+    ~DebugFinder();
+
+public slots:
+    void find();
+
+signals:
+    void foundDbgPkg(const QString &dbgpkg);
+    void foundNoDbgPkg(const QString &file);
+    void alreadyInstalled();
 
 private:
     QApt::Package *getDebPkg(QApt::Package *package);
 
     QApt::Backend *m_backend;
     QStringList *m_files;
-
-signals:
-    void foundDbgPkg(const QString &dbgpkg);
-    void foundNoDbgPkg(const QString &file);
-    void alreadyInstalled();
 };
 
 #endif // DBGLOOKUPTHREAD_H

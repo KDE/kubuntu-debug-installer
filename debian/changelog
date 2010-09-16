@@ -14,8 +14,15 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
     Otherwise the bool is ignore completely.
   * Use qApp->exit to end the event loop instead of plain exit() 
   * Set version string using supreme cmake magic
+  * Get rid of thread. Instead we now have DebugFinder which is a QObject
+    essentially exposing the same signals&slots that the old thread exposed.
+    Now such a finder gets constructed in the installer and move to a thread
+    of which then the event loop starts. That way no blocking whatsoever
+    occurs in the GUI as long as all interaction with the finde happens via
+    the event loop (except that it is very non-blocking thanks to QApt
+    already)
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 15:05:36 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 16:08:02 +0200
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 

@@ -1,6 +1,7 @@
 /*
   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>
   Copyright © 2010 Felix Geyer <debfx@fobos.de>
+  Copyright © 2010 Jonathan Thomas <echidnaman@kubuntu.org>
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -19,23 +20,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "dbglookupthread.h"
+#include "DebugFinder.h"
 
 #include <QtCore/QStringList>
 
 #include <libqapt/backend.h>
 
-DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
-        QThread(parent),
-        m_backend(0),
-        m_files(files)
+DebugFinder::DebugFinder(QObject *parent, QStringList *files) :
+    QObject(parent),
+    m_backend(new QApt::Backend),
+    m_files(files)
 {
+    m_backend->init();
 }
 
-QApt::Package *DbgLookupThread::getDebPkg(QApt::Package *package)
+DebugFinder::~DebugFinder()
 {
+    m_backend->deleteLater();
+}
+
+QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
+{
+    if (!package) {
+        return 0;
+    }
+
     QString srcPkg;
-    // TODO: map packages names for Qt
+    // TODO: map package names for Qt
     if (package->sourcePackage() == "qt4-x11") {
         srcPkg = "libqt4";
     } else {
@@ -57,13 +68,10 @@ QApt::Package *DbgLookupThread::getDebPkg(QApt::Package *package)
     return 0;
 }
 
-void DbgLookupThread::run()
+void DebugFinder::find()
 {
-    m_backend = new QApt::Backend;
-    m_backend->init();
-
     foreach (const QString &file, *m_files) {
-        QApt::Package *package = m_backend->packageForFile(file);
+       QApt::Package *package = m_backend->packageForFile(file);
 
         QApt::Package *dbgPkg = getDebPkg(package);
         if (!dbgPkg) {
@@ -74,7 +82,4 @@ void DbgLookupThread::run()
             emit foundDbgPkg(dbgPkg->name());
         }
     }
-
-    m_backend->deleteLater();
-    exec();
 }
