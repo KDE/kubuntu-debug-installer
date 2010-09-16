@@ -8,8 +8,12 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
   * Do not pointlessly copy QStrings around in signals and slots
   * Do not list already installed packages, instead emit alreadyInstalled
     and ignore the package (by Felix Geyer)
+  * Introduce a boolean state tracker whether we found an already installed
+    dbg package, if it is true and we have neither dbg packages nor missing
+    ones exit with no error is indicated to prevent errors from appearing.
+    Otherwise the bool is ignore completely.
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 13:50:58 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 14:00:00 +0200
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 

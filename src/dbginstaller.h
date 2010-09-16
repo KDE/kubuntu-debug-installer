@@ -35,6 +35,12 @@ public:
     ~DbgInstaller();
     void run();
 
+private slots:
+    void incrementProgress();
+    void foundDbgPkg(const QString &dbgpkg);
+    void foundNoDbgPkg(const QString &file);
+    void alreadyInstalled();
+
 private:
     void install();
     void askMissing();
@@ -44,11 +50,7 @@ private:
     QStringList *m_args;
     QStringList *m_dbgpkgs;
     QStringList *m_nodbgpkgs;
-
-private slots:
-    void incrementProgress();
-    void foundDbgPkg(const QString &dbgpkg);
-    void foundNoDbgPkg(const QString &file);
+    bool m_gotAlreadyInstalled;
 };
 
 #endif // DBGINSTALLER_H

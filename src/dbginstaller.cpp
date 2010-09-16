@@ -32,7 +32,8 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
     KProgressDialog(parent, caption),
     m_args(args),
     m_dbgpkgs(new QStringList()),
-    m_nodbgpkgs(new QStringList())
+    m_nodbgpkgs(new QStringList()),
+    m_gotAlreadyInstalled(false)
 {
     setWindowIcon(KIcon("kbugbuster"));
 
@@ -117,6 +118,8 @@ void DbgInstaller::incrementProgress()
     if (progressBar()->value() == progressBar()->maximum()) {
         if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
             askMissing();
+        } else if (m_dbgpkgs->empty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
+            exit(0);
         } else if (m_dbgpkgs->empty()) {
             exit(ERR_NO_SYMBOLS);
         }
@@ -138,6 +141,12 @@ void DbgInstaller::foundNoDbgPkg(const QString &file)
     incrementProgress();
 }
 
+void DbgInstaller::alreadyInstalled()
+{
+    m_gotAlreadyInstalled = true;
+    incrementProgress();
+}
+
 void DbgInstaller::run()
 {
     setLabelText(i18nc("@info:progress", "Looking for debug packages"));
@@ -148,6 +157,6 @@ void DbgInstaller::run()
     DbgLookupThread *t = new DbgLookupThread(this, m_args);
     connect(t, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
     connect(t, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
-    connect(t, SIGNAL(alreadyInstalled()), this, SLOT(incrementProgress()));
+    connect(t, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));
     t->start();
 }
