@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DBGLOOKUPTHREAD_H
-#define DBGLOOKUPTHREAD_H
+#ifndef DEBUGFINDER_H
+#define DEBUGFINDER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -52,4 +52,4 @@ private:
     QStringList *m_files;
 };
 
-#endif // DBGLOOKUPTHREAD_H
+#endif // DEBUGFINDER_H
