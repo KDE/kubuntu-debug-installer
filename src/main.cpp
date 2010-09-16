@@ -25,7 +25,7 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
-#include "version.h"
+#include "Version.h"
 
 static const char description[] =
         I18N_NOOP("A debug package installer for Kubuntu");
