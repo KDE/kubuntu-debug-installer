@@ -1,3 +1,9 @@
+kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
+
+  * Remove pointless include documentation
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 13:13:23 +0200
+
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 
   * Rebuild for libqapt0 -> libqapt1 transition

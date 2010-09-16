@@ -22,7 +22,6 @@
 
 #include <QtCore/QStringList>
 
-// LibQApt includes
 #include <libqapt/backend.h>
 
 DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
