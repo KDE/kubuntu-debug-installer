@@ -40,16 +40,15 @@ private:
     void askMissing();
     void askInstall();
     void checkListEmpty() const;
-    void incrementProgress();
 
     QStringList *m_args;
     QStringList *m_dbgpkgs;
     QStringList *m_nodbgpkgs;
 
 private slots:
-    void foundDbgPkg(QString);
-    void foundNoDbgPkg(QString);
-
+    void incrementProgress();
+    void foundDbgPkg(const QString &dbgpkg);
+    void foundNoDbgPkg(const QString &file);
 };
 
 #endif // DBGINSTALLER_H

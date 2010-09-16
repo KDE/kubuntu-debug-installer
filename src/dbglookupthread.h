@@ -42,8 +42,9 @@ private:
     QStringList *m_files;
 
 signals:
-    void foundDbgPkg(QString dbgpkg);
-    void foundNoDbgPkg(QString file);
+    void foundDbgPkg(const QString &dbgpkg);
+    void foundNoDbgPkg(const QString &file);
+    void alreadyInstalled();
 };
 
 #endif // DBGLOOKUPTHREAD_H

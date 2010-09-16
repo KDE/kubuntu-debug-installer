@@ -3,8 +3,11 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
   * Remove pointless include documentation
   * Fix include style
   * Improve looks of license headers
+  * Introduce new thread signal alreadyInstalled which will be used to
+    increment if a dbg package is already installed
+  * Do not pointlessly copy QStrings around in signals and slots
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 13:20:46 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 13:42:19 +0200
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 

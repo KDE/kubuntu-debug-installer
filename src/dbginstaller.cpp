@@ -124,7 +124,7 @@ void DbgInstaller::incrementProgress()
     }
 }
 
-void DbgInstaller::foundDbgPkg(QString dbgpkg)
+void DbgInstaller::foundDbgPkg(const QString &dbgpkg)
 {
     if (!m_dbgpkgs->contains(dbgpkg)) {
         m_dbgpkgs->append(dbgpkg);
@@ -132,7 +132,7 @@ void DbgInstaller::foundDbgPkg(QString dbgpkg)
     incrementProgress();
 }
 
-void DbgInstaller::foundNoDbgPkg(QString file)
+void DbgInstaller::foundNoDbgPkg(const QString &file)
 {
     m_nodbgpkgs->append(file);
     incrementProgress();
@@ -148,5 +148,6 @@ void DbgInstaller::run()
     DbgLookupThread *t = new DbgLookupThread(this, m_args);
     connect(t, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
     connect(t, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
+    connect(t, SIGNAL(alreadyInstalled()), this, SLOT(incrementProgress()));
     t->start();
 }
