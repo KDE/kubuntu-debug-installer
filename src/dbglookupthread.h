@@ -36,7 +36,7 @@ public:
     void run();
 
 private:
-    QString getDebPkg(QApt::Package *package);
+    QApt::Package *getDebPkg(QApt::Package *package);
 
     QApt::Backend *m_backend;
     QStringList *m_files;

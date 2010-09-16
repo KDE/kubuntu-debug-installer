@@ -1,5 +1,6 @@
 /*
   Copyright © 2010 Harald Sitter <apachelogger@ubuntu.com>
+  Copyright © 2010 Felix Geyer <debfx@fobos.de>
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License as
@@ -31,7 +32,7 @@ DbgLookupThread::DbgLookupThread(QObject *parent, QStringList *files) :
 {
 }
 
-QString DbgLookupThread::getDebPkg(QApt::Package *package)
+QApt::Package *DbgLookupThread::getDebPkg(QApt::Package *package)
 {
     QString srcPkg;
     // TODO: map packages names for Qt
@@ -41,17 +42,19 @@ QString DbgLookupThread::getDebPkg(QApt::Package *package)
         srcPkg = package->sourcePackage();
     }
 
-    QString dbgsymPackage(srcPkg + "-dbgsym");
-    if (m_backend->package(dbgsymPackage)) {
-        return dbgsymPackage;
+    QApt::Package *dbgPkg;
+
+    dbgPkg = m_backend->package(srcPkg + "-dbgsym");
+    if (dbgPkg) {
+        return dbgPkg;
     }
 
-    QString dbgPackage(srcPkg + "-dbg");
-    if (m_backend->package(dbgPackage)) {
-        return dbgPackage;
+    dbgPkg = m_backend->package(srcPkg + "-dbg");
+    if (dbgPkg) {
+        return dbgPkg;
     }
 
-    return QString();
+    return 0;
 }
 
 void DbgLookupThread::run()
@@ -62,15 +65,13 @@ void DbgLookupThread::run()
     foreach (const QString &file, *m_files) {
         QApt::Package *package = m_backend->packageForFile(file);
 
-        QString dbgpkg;
-        if (package) {
-            dbgpkg = getDebPkg(package);
-        }
-
-        if (dbgpkg.isEmpty()) {
+        QApt::Package *dbgPkg = getDebPkg(package);
+        if (!dbgPkg) {
             emit foundNoDbgPkg(file);
+        } else if (dbgPkg->isInstalled()) {
+            emit alreadyInstalled();
         } else {
-            emit foundDbgPkg(dbgpkg);
+            emit foundDbgPkg(dbgPkg->name());
         }
     }
 
