@@ -49,7 +49,7 @@ private:
     QApt::Package *getDebPkg(QApt::Package *package);
 
     QApt::Backend *m_backend;
-    QStringList *m_files;
+    QStringList m_files;
 };
 
 #endif // DEBUGFINDER_H

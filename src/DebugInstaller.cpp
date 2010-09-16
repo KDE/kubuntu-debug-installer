@@ -28,13 +28,14 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KDebug>
 
 #include "DebugFinder.h"
 
 // Because qapp->exit only ends event processing the current function would not
 // end, hence it is necessary to ensure that the function returns immediately.
-#define exit(x) qApp->exit(x); return;
+// Also ensure that the finderthread's eventloop gets stopped to prevent
+// crashes from access to implicitly shared QString data.
+#define exit(x) m_finderThread->exit(x); m_finderThread->terminate(); qApp->exit(x); return;
 
 DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
@@ -59,9 +60,6 @@ DebugInstaller::~DebugInstaller()
 {
     delete m_dbgpkgs;
     delete m_nodbgpkgs;
-    if (wasCancelled()) {
-        exit(ERR_CANCEL);
-    }
 }
 
 void DebugInstaller::install()
@@ -125,11 +123,11 @@ void DebugInstaller::incrementProgress()
 {
     progressBar()->setValue(progressBar()->value() + 1);
     if (progressBar()->value() == progressBar()->maximum()) {
-        if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
+        if (!m_nodbgpkgs->isEmpty() && !m_dbgpkgs->isEmpty()) {
             askMissing();
-        } else if (m_dbgpkgs->empty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
+        } else if (m_dbgpkgs->isEmpty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
             exit(0);
-        } else if (m_dbgpkgs->empty()) {
+        } else if (m_dbgpkgs->isEmpty()) {
             exit(ERR_NO_SYMBOLS);
         }
         askInstall();
@@ -156,6 +154,11 @@ void DebugInstaller::alreadyInstalled()
     incrementProgress();
 }
 
+void DebugInstaller::reject()
+{
+    exit(ERR_CANCEL);
+}
+
 void DebugInstaller::run()
 {
     setLabelText(i18nc("@info:progress", "Looking for debug packages"));
@@ -163,13 +166,14 @@ void DebugInstaller::run()
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
 
-    DebugFinder *finder = new DebugFinder(0, m_args);
-    connect(finder, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
-    connect(finder, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
-    connect(finder, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));
+    m_finder = new DebugFinder(0, m_args);
+    connect(m_finder, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
+    connect(m_finder, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
+    connect(m_finder, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));
 
-    QThread *thread = new QThread(this);
-    finder->moveToThread(thread);
-    thread->start();
-    QTimer::singleShot(0, finder, SLOT(find()));
+    m_finderThread = new QThread(this);
+    m_finder->moveToThread(m_finderThread);
+    m_finderThread->start();
+
+    QTimer::singleShot(0, m_finder, SLOT(find()));
 }

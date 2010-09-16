@@ -27,6 +27,9 @@
 #define ERR_NO_SYMBOLS 2
 #define ERR_CANCEL 3
 
+class DebugFinder;
+class QThread;
+
 class DebugInstaller : public KProgressDialog {
     Q_OBJECT
 public:
@@ -41,6 +44,8 @@ private slots:
     void foundNoDbgPkg(const QString &file);
     void alreadyInstalled();
 
+    virtual void reject();
+
 private:
     void install();
     void askMissing();
@@ -51,6 +56,9 @@ private:
     QStringList *m_dbgpkgs;
     QStringList *m_nodbgpkgs;
     bool m_gotAlreadyInstalled;
+
+    QThread *m_finderThread;
+    DebugFinder *m_finder;
 };
 
 #endif // DEBUGINSTALLER_H

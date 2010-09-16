@@ -23,20 +23,21 @@
 #include "DebugFinder.h"
 
 #include <QtCore/QStringList>
+#include <QtCore/QThread>
 
 #include <libqapt/backend.h>
 
 DebugFinder::DebugFinder(QObject *parent, QStringList *files) :
     QObject(parent),
     m_backend(new QApt::Backend),
-    m_files(files)
+    m_files(QStringList(*files))
 {
     m_backend->init();
 }
 
 DebugFinder::~DebugFinder()
 {
-    m_backend->deleteLater();
+    delete m_backend;
 }
 
 QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
@@ -70,7 +71,7 @@ QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
 
 void DebugFinder::find()
 {
-    foreach (const QString &file, *m_files) {
+    foreach (const QString &file, m_files) {
        QApt::Package *package = m_backend->packageForFile(file);
 
         QApt::Package *dbgPkg = getDebPkg(package);
@@ -82,4 +83,6 @@ void DebugFinder::find()
             emit foundDbgPkg(dbgPkg->name());
         }
     }
+    m_backend->deleteLater();
+    thread()->quit();
 }
