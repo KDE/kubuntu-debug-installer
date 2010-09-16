@@ -18,7 +18,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "dbginstaller.h"
+#include "DebugInstaller.h"
 
 #include <KApplication>
 #include <KAboutData>
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
     args->clear();
 
-    DbgInstaller *installer = new DbgInstaller(0, about.programName(), arglist);
+    DebugInstaller *installer = new DebugInstaller(0, about.programName(), arglist);
     installer->show();
     installer->run();
 

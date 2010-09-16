@@ -19,7 +19,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "dbginstaller.h"
+#include "DebugInstaller.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QProcess>
@@ -36,7 +36,7 @@
 // end, hence it is necessary to ensure that the function returns immediately.
 #define exit(x) qApp->exit(x); return;
 
-DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
+DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
     KProgressDialog(parent, caption),
     m_args(args),
@@ -55,7 +55,7 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
     }
 }
 
-DbgInstaller::~DbgInstaller()
+DebugInstaller::~DebugInstaller()
 {
     delete m_dbgpkgs;
     delete m_nodbgpkgs;
@@ -64,7 +64,7 @@ DbgInstaller::~DbgInstaller()
     }
 }
 
-void DbgInstaller::install()
+void DebugInstaller::install()
 {
     QProcess install;
     install.start(QString("/usr/bin/qapt-batch --install %1")
@@ -78,7 +78,7 @@ void DbgInstaller::install()
     close();
 }
 
-void DbgInstaller::askMissing()
+void DebugInstaller::askMissing()
 {
     checkListEmpty();
     QString msgtext = i18nc("@info", "No debug packages could be found for the files"
@@ -94,7 +94,7 @@ void DbgInstaller::askMissing()
     }
 }
 
-void DbgInstaller::askInstall()
+void DebugInstaller::askInstall()
 {
     checkListEmpty();
     QString msgtext = i18nc("@info", "Do you want to install the following debug packages"
@@ -112,7 +112,7 @@ void DbgInstaller::askInstall()
     install();
 }
 
-void DbgInstaller::checkListEmpty() const
+void DebugInstaller::checkListEmpty() const
 {
     if (!m_dbgpkgs->isEmpty()) {
         return;
@@ -121,7 +121,7 @@ void DbgInstaller::checkListEmpty() const
     exit(ERR_NO_SYMBOLS);
 }
 
-void DbgInstaller::incrementProgress()
+void DebugInstaller::incrementProgress()
 {
     progressBar()->setValue(progressBar()->value() + 1);
     if (progressBar()->value() == progressBar()->maximum()) {
@@ -136,7 +136,7 @@ void DbgInstaller::incrementProgress()
     }
 }
 
-void DbgInstaller::foundDbgPkg(const QString &dbgpkg)
+void DebugInstaller::foundDbgPkg(const QString &dbgpkg)
 {
     if (!m_dbgpkgs->contains(dbgpkg)) {
         m_dbgpkgs->append(dbgpkg);
@@ -144,19 +144,19 @@ void DbgInstaller::foundDbgPkg(const QString &dbgpkg)
     incrementProgress();
 }
 
-void DbgInstaller::foundNoDbgPkg(const QString &file)
+void DebugInstaller::foundNoDbgPkg(const QString &file)
 {
     m_nodbgpkgs->append(file);
     incrementProgress();
 }
 
-void DbgInstaller::alreadyInstalled()
+void DebugInstaller::alreadyInstalled()
 {
     m_gotAlreadyInstalled = true;
     incrementProgress();
 }
 
-void DbgInstaller::run()
+void DebugInstaller::run()
 {
     setLabelText(i18nc("@info:progress", "Looking for debug packages"));
 

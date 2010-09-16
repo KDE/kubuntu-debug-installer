@@ -18,8 +18,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DBGINSTALLER_H
-#define DBGINSTALLER_H
+#ifndef DEBUGINSTALLER_H
+#define DEBUGINSTALLER_H
 
 #include <KProgressDialog>
 
@@ -27,12 +27,12 @@
 #define ERR_NO_SYMBOLS 2
 #define ERR_CANCEL 3
 
-class DbgInstaller : public KProgressDialog {
+class DebugInstaller : public KProgressDialog {
     Q_OBJECT
 public:
-    explicit DbgInstaller(KProgressDialog *parent = 0, const QString &caption = "",
-                          QStringList *args = 0);
-    ~DbgInstaller();
+    explicit DebugInstaller(KProgressDialog *parent = 0,
+                            const QString &caption = "", QStringList *args = 0);
+    ~DebugInstaller();
     void run();
 
 private slots:
@@ -53,4 +53,4 @@ private:
     bool m_gotAlreadyInstalled;
 };
 
-#endif // DBGINSTALLER_H
+#endif // DEBUGINSTALLER_H

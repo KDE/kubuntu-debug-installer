@@ -3,7 +3,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(installdbgsymbols_SRCS
     DebugFinder.cpp
-    dbginstaller.cpp
+    DebugInstaller.cpp
     main.cpp
 )
 
