@@ -21,7 +21,7 @@
 #ifndef DBGLOOKUPTHREAD_H
 #define DBGLOOKUPTHREAD_H
 
-#include <QThread>
+#include <QtCore/QThread>
 
 namespace QApt {
     class Backend;

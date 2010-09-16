@@ -20,7 +20,7 @@
 
 #include "dbginstaller.h"
 
-#include <QProcess>
+#include <QtCore/QProcess>
 
 #include <KLocale>
 #include <KMessageBox>
