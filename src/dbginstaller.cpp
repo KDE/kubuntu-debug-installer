@@ -20,6 +20,7 @@
 
 #include "dbginstaller.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QProcess>
 
 #include <KLocale>
@@ -42,7 +43,7 @@ DbgInstaller::DbgInstaller(KProgressDialog *parent, const QString &caption,
                                        " were provided, so no debug"
                                        " packages can be found."),
                            i18nc("@title:window", "Can't lookup debug packages"));
-        exit(ERR_RANDOM_ERR);
+        qApp->exit(ERR_RANDOM_ERR);
     }
 }
 
@@ -51,7 +52,7 @@ DbgInstaller::~DbgInstaller()
     delete m_dbgpkgs;
     delete m_nodbgpkgs;
     if (wasCancelled()) {
-        exit(ERR_CANCEL);
+        qApp->exit(ERR_CANCEL);
     }
 }
 
@@ -63,7 +64,7 @@ void DbgInstaller::install()
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
     if (install.exitCode() != 0) {
-        exit(ERR_RANDOM_ERR);
+        qApp->exit(ERR_RANDOM_ERR);
     }
 
     close();
@@ -81,7 +82,7 @@ void DbgInstaller::askMissing()
                                             KStandardGuiItem::cont(),
                                             KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        exit(ERR_NO_SYMBOLS);
+        qApp->exit(ERR_NO_SYMBOLS);
     }
 }
 
@@ -97,7 +98,7 @@ void DbgInstaller::askInstall()
                                                       "dialog-ok"),
                                              KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        exit(ERR_CANCEL);
+        qApp->exit(ERR_CANCEL);
     }
 
     install();
@@ -109,7 +110,7 @@ void DbgInstaller::checkListEmpty() const
         return;
     }
 
-    exit(ERR_NO_SYMBOLS);
+    qApp->exit(ERR_NO_SYMBOLS);
 }
 
 void DbgInstaller::incrementProgress()
@@ -119,9 +120,9 @@ void DbgInstaller::incrementProgress()
         if (!m_nodbgpkgs->empty() && !m_dbgpkgs->empty()) {
             askMissing();
         } else if (m_dbgpkgs->empty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
-            exit(0);
+            qApp->exit(0);
         } else if (m_dbgpkgs->empty()) {
-            exit(ERR_NO_SYMBOLS);
+            qApp->exit(ERR_NO_SYMBOLS);
         }
         askInstall();
     }

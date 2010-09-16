@@ -12,8 +12,9 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
     dbg package, if it is true and we have neither dbg packages nor missing
     ones exit with no error is indicated to prevent errors from appearing.
     Otherwise the bool is ignore completely.
+  * Use qApp->exit to end the event loop instead of plain exit() 
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 14:00:00 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 14:05:50 +0200
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 
