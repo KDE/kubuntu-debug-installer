@@ -35,8 +35,7 @@ QString DbgLookupThread::getDebPkg(QApt::Package *package)
 {
     QString srcPkg;
     // TODO: map packages names for Qt
-    if (package->sourcePackage() == "qt4-x11")
-    {
+    if (package->sourcePackage() == "qt4-x11") {
         srcPkg = "libqt4";
     } else {
         srcPkg = package->sourcePackage();
