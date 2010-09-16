@@ -26,8 +26,12 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
   * Stop exceeding 80 chars/line in build-deps
   * Rename dbginstaller to DebugInstaller
   * Switch to CamelCase file names
+  * Do not pass the file list to the finder object in its ctor but use the
+    event loop. Unfortunately this does not allow the thread to stop
+    immediately when quit is called, which is why the finder has a stopped
+    member to speed up find() calls after stop() was called on the finder.
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 16:18:40 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 21:29:43 +0200
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 

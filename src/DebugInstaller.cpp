@@ -167,7 +167,7 @@ void DebugInstaller::run()
     progressBar()->setMaximum(m_args->count());
     incrementProgress();
 
-    m_finder = new DebugFinder(0, m_args);
+    m_finder = new DebugFinder;
     connect(m_finder, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));
     connect(m_finder, SIGNAL(foundNoDbgPkg(QString)), this, SLOT(foundNoDbgPkg(QString)));
     connect(m_finder, SIGNAL(alreadyInstalled()), this, SLOT(alreadyInstalled()));

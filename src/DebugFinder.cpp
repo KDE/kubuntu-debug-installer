@@ -27,10 +27,9 @@
 
 #include <libqapt/backend.h>
 
-DebugFinder::DebugFinder(QObject *parent, QStringList *files) :
+DebugFinder::DebugFinder(QObject *parent) :
     QObject(parent),
     m_backend(new QApt::Backend),
-    m_files(QStringList(*files)),
     m_stop(false)
 {
     m_backend->init();
@@ -87,9 +86,9 @@ void DebugFinder::find(const QString &file)
      }
 }
 
-void DebugFinder::find()
+void DebugFinder::find(const QStringList &files)
 {
-    foreach (const QString &file, m_files) {
+    foreach (const QString &file, files) {
         find(file);
     }
     m_backend->deleteLater();

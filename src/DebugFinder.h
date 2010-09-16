@@ -34,12 +34,12 @@ class DebugFinder : public QObject
 {
     Q_OBJECT
 public:
-    explicit DebugFinder(QObject *parent = 0, QStringList *files = 0);
+    explicit DebugFinder(QObject *parent = 0);
     ~DebugFinder();
 
 public slots:
     void find(const QString &file);
-    void find();
+    void find(const QStringList &files);
     void stop();
 
 signals:
@@ -49,9 +49,7 @@ signals:
 
 private:
     QApt::Package *getDebPkg(QApt::Package *package);
-
     QApt::Backend *m_backend;
-    QStringList m_files;
 
     bool m_stop;
 };
