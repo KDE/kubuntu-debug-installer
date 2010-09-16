@@ -3,7 +3,9 @@ Upstream-Maintainer: Harald Sitter <apachelogger@ubuntu.com>
 Upstream-Source: https://code.launchpad.net/kubuntu-debug-installer
 
 Files: *
-Copyright: Copyright 2010, Harald Sitter <apachelogger@ubuntu.com>
+Copyright: 2010, Harald Sitter <apachelogger@ubuntu.com>
+Copyright: 2010, Felix Geyer <debfx@fobos.de>
+Copyright: 2010, Jonathan Thomas <echidnaman@kubuntu.org>
 License: GPL-2 or GPL-3
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License as
