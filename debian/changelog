@@ -1,5 +1,6 @@
-kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
+kubuntu-debug-installer (11.04ubuntu1) UNRELEASED; urgency=low
 
+  [ Harald Sitter ]
   * Remove pointless include documentation
   * Fix include style
   * Improve looks of license headers
@@ -30,6 +31,11 @@ kubuntu-debug-installer (10.10ubuntu5) UNRELEASED; urgency=low
     event loop. Unfortunately this does not allow the thread to stop
     immediately when quit is called, which is why the finder has a stopped
     member to speed up find() calls after stop() was called on the finder.
+
+  [ Jonathan Thomas ]
+  * Some packages' debug packages follow the format binaryPackageName + 
+    "-dbg". Use this as a fallback in case the semi-standard 
+    sourcePackageName + ("-dbg" || "-dbgsym") rule hasn't been followed.
 
  -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 21:29:43 +0200
 
