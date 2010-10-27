@@ -74,16 +74,17 @@ void DebugFinder::find(const QString &file)
     if (m_stop) {
         return;
     }
+
     QApt::Package *package = m_backend->packageForFile(file);
 
-     QApt::Package *dbgPkg = getDebPkg(package);
-     if (!dbgPkg) {
-         emit foundNoDbgPkg(file);
-     } else if (dbgPkg->isInstalled()) {
-         emit alreadyInstalled();
-     } else {
+    QApt::Package *dbgPkg = getDebPkg(package);
+    if (!dbgPkg) {
+        emit foundNoDbgPkg(file);
+    } else if (dbgPkg->isInstalled()) {
+        emit alreadyInstalled();
+    } else {
          emit foundDbgPkg(dbgPkg->name());
-     }
+    }
 }
 
 void DebugFinder::find(const QStringList &files)
