@@ -48,7 +48,7 @@ signals:
     void alreadyInstalled();
 
 private:
-    QApt::Package *getDebPkg(QApt::Package *package);
+    QApt::Package *getDbgPkg(QApt::Package *package);
     QApt::Backend *m_backend;
 
     bool m_stop;

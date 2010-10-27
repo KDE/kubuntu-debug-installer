@@ -25,8 +25,6 @@
 #include <QtCore/QStringList>
 #include <QtCore/QThread>
 
-#include <KDebug>
-
 #include <libqapt/backend.h>
 
 DebugFinder::DebugFinder(QObject *parent) :
@@ -42,7 +40,7 @@ DebugFinder::~DebugFinder()
     delete m_backend;
 }
 
-QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
+QApt::Package *DebugFinder::getDbgPkg(QApt::Package *package)
 {
     if (!package) {
         return 0;
@@ -56,7 +54,7 @@ QApt::Package *DebugFinder::getDebPkg(QApt::Package *package)
         srcPkg = package->sourcePackage();
     }
 
-    QApt::Package *dbgPkg;
+    QApt::Package *dbgPkg = 0;
 
     dbgPkg = m_backend->package(srcPkg + "-dbgsym");
     if (dbgPkg) {
@@ -82,9 +80,7 @@ void DebugFinder::find(const QString &file)
         return;
     }
 
-    kDebug() << "The file is" << file;
     QApt::Package *package = m_backend->packageForFile(file);
-    kDebug() << "The name is" << package->name();
 
     QApt::Package *dbgPkg = getDebPkg(package);
     if (!dbgPkg) {
