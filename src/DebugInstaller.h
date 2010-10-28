@@ -53,8 +53,8 @@ private:
     void checkListEmpty() const;
 
     QStringList *m_args;
-    QStringList *m_dbgpkgs;
-    QStringList *m_nodbgpkgs;
+    QStringList m_dbgpkgs;
+    QStringList m_nodbgpkgs;
     bool m_gotAlreadyInstalled;
 
     QThread *m_finderThread;

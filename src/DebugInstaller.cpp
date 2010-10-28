@@ -56,15 +56,13 @@ DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
 
 DebugInstaller::~DebugInstaller()
 {
-    delete m_dbgpkgs;
-    delete m_nodbgpkgs;
 }
 
 void DebugInstaller::install()
 {
     QProcess install;
     install.start(QString("/usr/bin/qapt-batch --install %1")
-                   .arg(m_dbgpkgs->join(QString(' '))));
+                   .arg(m_dbgpkgs.join(QString(' '))));
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
     if (install.exitCode() != 0) {
@@ -81,7 +79,7 @@ void DebugInstaller::askMissing()
                            " listed below.\n"
                            "Do you want to continue anyway?");
     QString msgcaption = i18nc("@title:window", "Couldn't find debug packages");
-    int ret = KMessageBox::warningYesNoList(this, msgtext, *m_nodbgpkgs,
+    int ret = KMessageBox::warningYesNoList(this, msgtext, m_nodbgpkgs,
                                             msgcaption,
                                             KStandardGuiItem::cont(),
                                             KStandardGuiItem::cancel());
@@ -96,7 +94,7 @@ void DebugInstaller::askInstall()
     QString msgtext = i18nc("@info", "Do you want to install the following debug packages"
                            " so that the necessary debug symbols become available?");
     QString msgcaption = i18nc("@title:window", "Confirm package installation");
-    int ret = KMessageBox::questionYesNoList(this, msgtext, *m_dbgpkgs,
+    int ret = KMessageBox::questionYesNoList(this, msgtext, m_dbgpkgs,
                                              msgcaption,
                                              KGuiItem(i18nc("@action:button", "Install"),
                                                       "dialog-ok"),
@@ -110,7 +108,7 @@ void DebugInstaller::askInstall()
 
 void DebugInstaller::checkListEmpty() const
 {
-    if (!m_dbgpkgs->isEmpty()) {
+    if (!m_dbgpkgs.isEmpty()) {
         return;
     }
 
@@ -121,11 +119,11 @@ void DebugInstaller::incrementProgress()
 {
     progressBar()->setValue(progressBar()->value() + 1);
     if (progressBar()->value() == progressBar()->maximum()) {
-        if (!m_nodbgpkgs->isEmpty() && !m_dbgpkgs->isEmpty()) {
+        if (!m_nodbgpkgs.isEmpty() && !m_dbgpkgs.isEmpty()) {
             askMissing();
-        } else if (m_dbgpkgs->isEmpty() && m_nodbgpkgs->isEmpty() && m_gotAlreadyInstalled) {
+        } else if (m_dbgpkgs.isEmpty() && m_nodbgpkgs.isEmpty() && m_gotAlreadyInstalled) {
             exit(0);
-        } else if (m_dbgpkgs->isEmpty()) {
+        } else if (m_dbgpkgs.isEmpty()) {
             exit(ERR_NO_SYMBOLS);
         }
         askInstall();
@@ -134,15 +132,15 @@ void DebugInstaller::incrementProgress()
 
 void DebugInstaller::foundDbgPkg(const QString &dbgpkg)
 {
-    if (!m_dbgpkgs->contains(dbgpkg)) {
-        m_dbgpkgs->append(dbgpkg);
+    if (!m_dbgpkgs.contains(dbgpkg)) {
+        m_dbgpkgs.append(dbgpkg);
     }
     incrementProgress();
 }
 
 void DebugInstaller::foundNoDbgPkg(const QString &file)
 {
-    m_nodbgpkgs->append(file);
+    m_nodbgpkgs.append(file);
     incrementProgress();
 }
 
