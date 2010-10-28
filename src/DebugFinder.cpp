@@ -82,7 +82,7 @@ void DebugFinder::find(const QString &file)
 
     QApt::Package *package = m_backend->packageForFile(file);
 
-    QApt::Package *dbgPkg = getDebPkg(package);
+    QApt::Package *dbgPkg = getDbgPkg(package);
     if (!dbgPkg) {
         emit foundNoDbgPkg(file);
     } else if (dbgPkg->isInstalled()) {
