@@ -53,9 +53,9 @@ int main(int argc, char **argv)
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    QStringList *arglist = new QStringList();
-    for(int i = 0; i < args->count(); i++) {
-        arglist->append(args->arg(i));
+    QStringList arglist;
+    for(int i = 0; i < args->count(); ++i) {
+        arglist.append(args->arg(i));
     }
 
     args->clear();

@@ -37,15 +37,15 @@
 // crashes from access to implicitly shared QString data.
 #define exit(x) m_finder->stop(); m_finderThread->quit(); m_finderThread->wait(); qApp->exit(x); return;
 
-DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
-                           QStringList *args) :
+DebugInstaller::DebugInstaller(QWidget *parent, const QString &caption,
+                           const QStringList &args) :
     KProgressDialog(parent, caption),
     m_args(args),
     m_gotAlreadyInstalled(false)
 {
     setWindowIcon(KIcon("kbugbuster"));
 
-    if (m_args->empty()) {
+    if (m_args.isEmpty()) {
         KMessageBox::error(this, i18nc("@info Error message", "No file paths"
                                        " were provided, so no debug"
                                        " packages can be found."),
@@ -160,7 +160,7 @@ void DebugInstaller::run()
 {
     setLabelText(i18nc("@info:progress", "Looking for debug packages"));
 
-    progressBar()->setMaximum(m_args->count());
+    progressBar()->setMaximum(m_args.count());
     incrementProgress();
 
     m_finder = new DebugFinder;
@@ -172,7 +172,7 @@ void DebugInstaller::run()
     m_finder->moveToThread(m_finderThread);
     m_finderThread->start();
 
-    foreach (const QString &file, *m_args) {
+    foreach (const QString &file, m_args) {
         QMetaObject::invokeMethod(m_finder, "find", Qt::QueuedConnection,
                                   Q_ARG(QString, file));
     }

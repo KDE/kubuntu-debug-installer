@@ -33,8 +33,8 @@ class QThread;
 class DebugInstaller : public KProgressDialog {
     Q_OBJECT
 public:
-    explicit DebugInstaller(KProgressDialog *parent = 0,
-                            const QString &caption = "", QStringList *args = 0);
+    explicit DebugInstaller(QWidget *parent, const QString &caption,
+                            const QStringList &args);
     ~DebugInstaller();
     void run();
 
@@ -52,7 +52,7 @@ private:
     void askInstall();
     void checkListEmpty() const;
 
-    QStringList *m_args;
+    QStringList m_args;
     QStringList m_dbgpkgs;
     QStringList m_nodbgpkgs;
     bool m_gotAlreadyInstalled;
