@@ -41,8 +41,6 @@ DebugInstaller::DebugInstaller(KProgressDialog *parent, const QString &caption,
                            QStringList *args) :
     KProgressDialog(parent, caption),
     m_args(args),
-    m_dbgpkgs(new QStringList()),
-    m_nodbgpkgs(new QStringList()),
     m_gotAlreadyInstalled(false)
 {
     setWindowIcon(KIcon("kbugbuster"));
