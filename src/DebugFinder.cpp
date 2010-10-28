@@ -88,7 +88,7 @@ void DebugFinder::find(const QString &file)
     } else if (dbgPkg->isInstalled()) {
         emit alreadyInstalled();
     } else {
-         emit foundDbgPkg(dbgPkg->name());
+        emit foundDbgPkg(dbgPkg->name());
     }
 }
 
