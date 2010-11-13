@@ -1,4 +1,4 @@
-kubuntu-debug-installer (11.04ubuntu1) UNRELEASED; urgency=low
+kubuntu-debug-installer (11.04ubuntu1) natty; urgency=low
 
   [ Harald Sitter ]
   * Remove pointless include documentation
@@ -37,7 +37,7 @@ kubuntu-debug-installer (11.04ubuntu1) UNRELEASED; urgency=low
     "-dbg". Use this as a fallback in case the semi-standard 
     sourcePackageName + ("-dbg" || "-dbgsym") rule hasn't been followed.
 
- -- Harald Sitter <apachelogger@ubuntu.com>  Thu, 16 Sep 2010 21:29:43 +0200
+ -- Harald Sitter <apachelogger@ubuntu.com>  Sat, 13 Nov 2010 17:34:33 +0100
 
 kubuntu-debug-installer (10.10ubuntu4) maverick; urgency=low
 
