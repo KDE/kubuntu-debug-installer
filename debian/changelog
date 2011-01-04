@@ -1,4 +1,4 @@
-kubuntu-debug-installer (11.04ubuntu2) natty; urgency=low
+kubuntu-debug-installer (11.04ubuntu2) UNRELEASED; urgency=low
 
   * Use "pretty" includes for QApt:
     - Bump minimum QApt version to the first version these were present
