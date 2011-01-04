@@ -48,8 +48,8 @@ DebugInstaller::DebugInstaller(QWidget *parent, const QString &caption,
     if (m_args.isEmpty()) {
         KMessageBox::error(this, i18nc("@info Error message", "No file paths"
                                        " were provided, so no debug"
-                                       " packages can be found."),
-                           i18nc("@title:window", "Can't lookup debug packages"));
+                                       " packages could be found."),
+                           i18nc("@title:window", "Couldn't find debug packages");
         exit(ERR_RANDOM_ERR);
     }
 }

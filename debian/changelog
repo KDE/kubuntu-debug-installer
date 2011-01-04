@@ -2,6 +2,8 @@ kubuntu-debug-installer (11.04ubuntu2) UNRELEASED; urgency=low
 
   * Use "pretty" includes for QApt:
     - Bump minimum QApt version to the first version these were present
+  * Make the strings for error dialogs consistent
+  * Make string consistently past-tense for error messages.
 
  -- Jonathan Thomas <echidnaman@kubuntu.org>  Tue, 04 Jan 2011 13:46:09 -0500
 
