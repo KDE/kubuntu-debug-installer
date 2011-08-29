@@ -1,11 +1,16 @@
-kubuntu-debug-installer (11.04ubuntu2) UNRELEASED; urgency=low
+kubuntu-debug-installer (11.04ubuntu2) oneiric; urgency=low
 
+  [ Jonathan Thomas ]
   * Use "pretty" includes for QApt:
     - Bump minimum QApt version to the first version these were present
   * Make the strings for error dialogs consistent
   * Make string consistently past-tense for error messages.
 
- -- Jonathan Thomas <echidnaman@kubuntu.org>  Tue, 04 Jan 2011 13:46:09 -0500
+  [ Harald Sitter ]
+  * Upload to rebuild and get rid of kdebase-runtime dep (renamed to
+    kde-runtime)
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Mon, 29 Aug 2011 16:33:23 +0200
 
 kubuntu-debug-installer (11.04ubuntu1) natty; urgency=low
 
