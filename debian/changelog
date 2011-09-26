@@ -1,3 +1,12 @@
+kubuntu-debug-installer (11.10ubuntu1) oneiric; urgency=low
+
+  * When called with no arguments terminate right away in the DebugInstaller
+    ctor, otherwise event processing would continue through run() and show()
+    causing a segfault along the line somewhere
+  * Bump standards version to 3.9.2
+
+ -- Harald Sitter <apachelogger@ubuntu.com>  Mon, 26 Sep 2011 15:33:10 +0200
+
 kubuntu-debug-installer (11.04ubuntu2) oneiric; urgency=low
 
   [ Jonathan Thomas ]

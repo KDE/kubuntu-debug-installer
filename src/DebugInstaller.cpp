@@ -35,10 +35,10 @@
 // end, hence it is necessary to ensure that the function returns immediately.
 // Also ensure that the finderthread's eventloop gets stopped to prevent
 // crashes from access to implicitly shared QString data.
-#define exit(x) m_finder->stop(); m_finderThread->quit(); m_finderThread->wait(); qApp->exit(x); return;
+#define EXIT(x) m_finder->stop(); m_finderThread->quit(); m_finderThread->wait(); qApp->exit(x); return;
 
 DebugInstaller::DebugInstaller(QWidget *parent, const QString &caption,
-                           const QStringList &args) :
+                               const QStringList &args) :
     KProgressDialog(parent, caption),
     m_args(args),
     m_gotAlreadyInstalled(false)
@@ -66,7 +66,7 @@ void DebugInstaller::install()
     // use blocking function since we do not show any UI
     install.waitForFinished(-1);
     if (install.exitCode() != 0) {
-        exit(ERR_RANDOM_ERR);
+        EXIT(ERR_RANDOM_ERR);
     }
 
     close();
@@ -84,7 +84,7 @@ void DebugInstaller::askMissing()
                                             KStandardGuiItem::cont(),
                                             KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        exit(ERR_NO_SYMBOLS);
+        EXIT(ERR_NO_SYMBOLS);
     }
 }
 
@@ -100,7 +100,7 @@ void DebugInstaller::askInstall()
                                                       "dialog-ok"),
                                              KStandardGuiItem::cancel());
     if (ret != KMessageBox::Yes) {
-        exit(ERR_CANCEL);
+        EXIT(ERR_CANCEL);
     }
 
     install();
@@ -112,7 +112,7 @@ void DebugInstaller::checkListEmpty() const
         return;
     }
 
-    exit(ERR_NO_SYMBOLS);
+    EXIT(ERR_NO_SYMBOLS);
 }
 
 void DebugInstaller::incrementProgress()
@@ -122,9 +122,9 @@ void DebugInstaller::incrementProgress()
         if (!m_nodbgpkgs.isEmpty() && !m_dbgpkgs.isEmpty()) {
             askMissing();
         } else if (m_dbgpkgs.isEmpty() && m_nodbgpkgs.isEmpty() && m_gotAlreadyInstalled) {
-            exit(0);
+            EXIT(0);
         } else if (m_dbgpkgs.isEmpty()) {
-            exit(ERR_NO_SYMBOLS);
+            EXIT(ERR_NO_SYMBOLS);
         }
         askInstall();
     }
@@ -153,7 +153,7 @@ void DebugInstaller::alreadyInstalled()
 void DebugInstaller::reject()
 {
     KProgressDialog::reject();
-    exit(ERR_CANCEL);
+    EXIT(ERR_CANCEL);
 }
 
 void DebugInstaller::run()
