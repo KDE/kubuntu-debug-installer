@@ -1,3 +1,15 @@
+kubuntu-debug-installer (13.04ubuntu1) raring-proposed; urgency=low
+
+  * Now that we can with QApt2, pass QApt::Backend a QObject parent to handle
+    memory management.
+  * Remove some unused code.
+  * Bump build-depend version for libqapt-dev to 1.9.60.
+  * Bump debhelper/compat version to 9:
+    - Fix dh argument order in debian/rules
+  * Bump Standards-Version to 3.9.3
+
+ -- Jonathan Thomas <echidnaman@kubuntu.org>  Tue, 30 Oct 2012 11:24:42 -0400
+
 kubuntu-debug-installer (11.10ubuntu1) oneiric; urgency=low
 
   * When called with no arguments terminate right away in the DebugInstaller

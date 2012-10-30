@@ -1,4 +1,4 @@
 #!/usr/bin/make -f
 
 %:
-	dh --dbg-package=kubuntu-debug-installer-dbg --with kde $@
+	dh $@ --with-kde --dbg-package=kubuntu-debug-installer-dbg
