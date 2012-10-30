@@ -35,7 +35,6 @@ class DebugFinder : public QObject
     Q_OBJECT
 public:
     explicit DebugFinder(QObject *parent = 0);
-    ~DebugFinder();
 
 public slots:
     void find(const QString &file);

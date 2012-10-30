@@ -29,15 +29,10 @@
 
 DebugFinder::DebugFinder(QObject *parent) :
     QObject(parent),
-    m_backend(new QApt::Backend),
+    m_backend(new QApt::Backend(this)),
     m_stop(false)
 {
     m_backend->init();
-}
-
-DebugFinder::~DebugFinder()
-{
-    delete m_backend;
 }
 
 QApt::Package *DebugFinder::getDbgPkg(QApt::Package *package)
