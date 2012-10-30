@@ -38,7 +38,6 @@ public:
 
 public slots:
     void find(const QString &file);
-    void find(const QStringList &files);
     void stop();
 
 signals:

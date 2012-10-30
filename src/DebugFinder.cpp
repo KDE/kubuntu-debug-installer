@@ -87,15 +87,6 @@ void DebugFinder::find(const QString &file)
     }
 }
 
-void DebugFinder::find(const QStringList &files)
-{
-    foreach (const QString &file, files) {
-        find(file);
-    }
-    m_backend->deleteLater();
-    thread()->quit();
-}
-
 void DebugFinder::stop()
 {
     m_stop = true;
