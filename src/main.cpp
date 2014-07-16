@@ -20,47 +20,42 @@
 
 #include "DebugInstaller.h"
 
-#include <KApplication>
+#include <QApplication>
+#include <QCommandLineParser>
+
 #include <KAboutData>
-#include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "Version.h"
 
-static const char description[] =
-        I18N_NOOP("A debug package installer for Kubuntu");
-
 int main(int argc, char **argv)
 {
-    KAboutData about("kubuntu-debug-installer", 0, ki18n("Debug package installer"),
-                     version, ki18n(description), KAboutData::License_GPL,
-                     ki18n("(C) 2010 Harald Sitter"), KLocalizedString(), 0,
-                     "apachelogger@ubuntu.com");
-    about.addAuthor( ki18n("Harald Sitter"), KLocalizedString(),
-                     "apachelogger@ubuntu.com" );
-    KCmdLineArgs::init(argc, argv, &about);
+    QApplication app(argc, argv);
 
-    KCmdLineOptions options;
-    options.add("+[FILES]", ki18n( "Files to find debug packages for" ));
-    KCmdLineArgs::addCmdLineOptions(options);
+    KAboutData aboutData("kubuntu-debug-installer",
+                         i18n("Debug package installer"),
+                         version,
+                         i18n("A debug package installer for Kubuntu"),
+                         KAboutLicense::LicenseKey::GPL,
+                         i18n("(C) 2010-2014 Harald Sitter"));
 
-    KApplication app;
+    aboutData.addAuthor(i18n("Harald Sitter"), QString(), QStringLiteral("apachelogger@ubuntu.com"));
+
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("FILES",
+                                 i18n("Files to find debug packages for"));
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     // do not restore!
     if (app.isSessionRestored()) {
         exit(0);
     }
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-    QStringList arglist;
-    for(int i = 0; i < args->count(); ++i) {
-        arglist.append(args->arg(i));
-    }
-
-    args->clear();
-
-    DebugInstaller *installer = new DebugInstaller(0, about.programName(), arglist);
+    DebugInstaller *installer = new DebugInstaller(parser.positionalArguments());
     installer->show();
     installer->run();
 

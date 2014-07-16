@@ -7,8 +7,12 @@ set(installdbgsymbols_SRCS
     main.cpp
 )
 
-kde4_add_executable(kubuntu-debug-installer ${installdbgsymbols_SRCS})
+add_executable(kubuntu-debug-installer ${installdbgsymbols_SRCS})
 
-target_link_libraries(kubuntu-debug-installer ${KDE4_KDEUI_LIBS} ${QAPT_LIBRARY})
+target_link_libraries(kubuntu-debug-installer
+    KF5::CoreAddons
+    KF5::I18n
+    KF5::WidgetsAddons
+    QApt::Main)
 
 install(TARGETS kubuntu-debug-installer ${INSTALL_TARGETS_DEFAULT_ARGS} )

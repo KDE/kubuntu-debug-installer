@@ -1,23 +1,21 @@
 project(kubuntu-debug-installer)
 
-find_package(KDE4 REQUIRED)
-find_package(QApt REQUIRED)
-include (KDE4Defaults)
+cmake_minimum_required(VERSION 2.8.12)
 
-macro_log_feature(QAPT_FOUND "QApt" "High-level Qt wrapper/Apt implementation around the Apt-pkg library"
-                  "http://kubuntu.org" FALSE "" "Used to look up packages")
+find_package(ECM 0.0.14 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} )
+include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
 
-execute_process(COMMAND src/version.sh
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                RESULT_VARIABLE VERSION_RESULT
-                OUTPUT_VARIABLE VERSION_STRING
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+find_package(KF5CoreAddons 5.0.0 REQUIRED)
+find_package(KF5I18n 5.0.0 REQUIRED)
+find_package(KF5WidgetsAddons 5.0.0 REQUIRED)
 
-if(NOT VERSION_RESULT EQUAL 0 OR VERSION_STRING STREQUAL "")
-    message(FATAL_ERROR "Could not get version from debian/changelog :'-(")
-endif(NOT VERSION_RESULT EQUAL 0 OR VERSION_STRING STREQUAL "")
+find_package(QApt 3.0.0 REQUIRED)
 
-add_subdirectory( src )
+add_subdirectory(src)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

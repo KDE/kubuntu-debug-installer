@@ -21,12 +21,12 @@
 
 #include "DebugInstaller.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QProcess>
-#include <QtCore/QThread>
-#include <QtCore/QTimer>
+#include <QCoreApplication>
+#include <QProcess>
+#include <QThread>
+#include <QTimer>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include "DebugFinder.h"
@@ -37,13 +37,12 @@
 // crashes from access to implicitly shared QString data.
 #define EXIT(x) m_finder->stop(); m_finderThread->quit(); m_finderThread->wait(); qApp->exit(x); return;
 
-DebugInstaller::DebugInstaller(QWidget *parent, const QString &caption,
-                               const QStringList &args) :
-    KProgressDialog(parent, caption),
-    m_args(args),
-    m_gotAlreadyInstalled(false)
+DebugInstaller::DebugInstaller(const QStringList &args)
+    : QProgressDialog()
+    , m_args(args)
+    , m_gotAlreadyInstalled(false)
 {
-    setWindowIcon(KIcon("kbugbuster"));
+    setWindowIcon(QIcon::fromTheme("kbugbuster"));
 
     if (m_args.isEmpty()) {
         KMessageBox::error(this, i18nc("@info Error message", "No file paths"
@@ -117,8 +116,10 @@ void DebugInstaller::checkListEmpty() const
 
 void DebugInstaller::incrementProgress()
 {
-    progressBar()->setValue(progressBar()->value() + 1);
-    if (progressBar()->value() == progressBar()->maximum()) {
+    setValue(value() + 1);
+    // When setting value to maximum it flips over to -1 (god knows why), so
+    // check it additionally to figure out whether we are at the end or not.
+    if (value() == maximum() || value() == -1) {
         if (!m_nodbgpkgs.isEmpty() && !m_dbgpkgs.isEmpty()) {
             askMissing();
         } else if (m_dbgpkgs.isEmpty() && m_nodbgpkgs.isEmpty() && m_gotAlreadyInstalled) {
@@ -152,7 +153,7 @@ void DebugInstaller::alreadyInstalled()
 
 void DebugInstaller::reject()
 {
-    KProgressDialog::reject();
+    QProgressDialog::reject();
     EXIT(ERR_CANCEL);
 }
 
@@ -160,8 +161,10 @@ void DebugInstaller::run()
 {
     setLabelText(i18nc("@info:progress", "Looking for debug packages"));
 
-    progressBar()->setMaximum(m_args.count());
-    incrementProgress();
+    setValue(0);
+    setMaximum(m_args.count());
+#warning why did we increment without anything... was value -1 maybe
+//     incrementProgress();
 
     m_finder = new DebugFinder;
     connect(m_finder, SIGNAL(foundDbgPkg(QString)), this, SLOT(foundDbgPkg(QString)));

@@ -21,7 +21,7 @@
 #ifndef DEBUGINSTALLER_H
 #define DEBUGINSTALLER_H
 
-#include <KProgressDialog>
+#include <QProgressDialog>
 
 #define ERR_RANDOM_ERR 1
 #define ERR_NO_SYMBOLS 2
@@ -30,11 +30,11 @@
 class DebugFinder;
 class QThread;
 
-class DebugInstaller : public KProgressDialog {
+class DebugInstaller : public QProgressDialog
+{
     Q_OBJECT
 public:
-    explicit DebugInstaller(QWidget *parent, const QString &caption,
-                            const QStringList &args);
+    explicit DebugInstaller(const QStringList &args);
     ~DebugInstaller();
     void run();
 
@@ -44,7 +44,7 @@ private slots:
     void foundNoDbgPkg(const QString &file);
     void alreadyInstalled();
 
-    virtual void reject();
+    virtual void reject() Q_DECL_OVERRIDE Q_DECL_FINAL;
 
 private:
     void install();
