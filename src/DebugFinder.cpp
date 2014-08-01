@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QThread>
 
-#include <LibQApt/Backend>
+#include <QApt/Backend>
 
 DebugFinder::DebugFinder(QObject *parent) :
     QObject(parent),
