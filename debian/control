@@ -3,7 +3,11 @@ Section: kde
 Priority: optional
 Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
 Build-Depends: debhelper (>= 9), pkg-kde-tools (>= 0.15.3ubuntu7), cmake,
- kdelibs5-dev, libqapt-dev (>= 1.9.60)
+ extra-cmake-modules,
+ libkf5coreaddons-dev,
+ libkf5i18n-dev,
+ libkf5widgetsaddons-dev,
+ libqapt-dev (>= 1.9.60)
 Standards-Version: 3.9.3
 X-Ubuntu-Use-Langpack: yes
 Homepage: https://www.launchpad.net/kubuntu-debug-installer
@@ -23,7 +27,6 @@ Section: debug
 Architecture: any
 Priority: extra
 Depends: ${misc:Depends}, kubuntu-debug-installer (= ${binary:Version})
-Recommends: kdelibs5-dbg
 Description: Debug package installer for Kubuntu - debug symbols
  This installer permits drkonqi, KDE's automatic backtrace and bug report
  utility to try find and install missing debug symbols, so that backtraces
