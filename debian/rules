@@ -1,3 +1,5 @@
+#!/usr/bin/make -f
+
 version := $(shell dpkg-parsechangelog | sed -n 's/^Version: //p')
 
 %:
