@@ -1,4 +1,4 @@
-kubuntu-debug-installer (14.10ubuntu1) UNRELEASED; urgency=medium
+kubuntu-debug-installer (15.04ubuntu1) UNRELEASED; urgency=medium
 
   * Port to KDE Frameworks 5
   * Remove crappy version parsing logic for something built into rules
