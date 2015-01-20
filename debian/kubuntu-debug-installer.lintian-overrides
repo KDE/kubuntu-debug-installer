@@ -1,0 +1,3 @@
+kubuntu-debug-installer: binary-without-manpage usr/bin/installdbgsymbols.sh
+kubuntu-debug-installer: binary-without-manpage usr/bin/kubuntu-debug-installer
+
