@@ -1,9 +1,9 @@
 Upstream-Name: kubuntu-debug-installer
-Upstream-Maintainer: Harald Sitter <apachelogger@ubuntu.com>
-Upstream-Source: https://code.launchpad.net/kubuntu-debug-installer
+Upstream-Maintainer: Harald Sitter <sitter@kde.org>
+Upstream-Source: http://quickgit.kde.org/?p=scratch%2Fsitter%2Fkubuntu-debug-installer.git
 
 Files: *
-Copyright: 2010, Harald Sitter <apachelogger@ubuntu.com>
+Copyright: 2010-2014, Harald Sitter <sitter@kde.org>
 Copyright: 2010, Felix Geyer <debfx@fobos.de>
 Copyright: 2010, Jonathan Thomas <echidnaman@kubuntu.org>
 License: GPL-2 or GPL-3
