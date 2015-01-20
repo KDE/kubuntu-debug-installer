@@ -1,7 +1,7 @@
 version := $(shell dpkg-parsechangelog | sed -n 's/^Version: //p')
 
 %:
-	dh $@ --with kde --dbg-package=kubuntu-debug-installer-dbg
+	dh $@ --with kf5 --dbg-package=kubuntu-debug-installer-dbg
 
 override_dh_auto_configure:
 	dh_auto_configure -- -DVERSION_STRING_FULL=$(version)
