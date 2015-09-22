@@ -1,3 +1,9 @@
+kubuntu-debug-installer (15.10ubuntu1) wily; urgency=medium
+
+  * New release for 15.10 only updating translations
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 22 Sep 2015 13:53:10 +0200
+
 kubuntu-debug-installer (15.04ubuntu1) vivid; urgency=medium
 
   * Port to KDE Frameworks 5
