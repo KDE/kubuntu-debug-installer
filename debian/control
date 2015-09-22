@@ -9,7 +9,6 @@ Build-Depends: debhelper (>= 9), pkg-kde-tools (>= 0.15.3ubuntu7), cmake,
  libkf5widgetsaddons-dev,
  libqapt-dev (>= 3.0.0)
 Standards-Version: 3.9.3
-X-Ubuntu-Use-Langpack: yes
 Homepage: https://www.kubuntu.org
 
 Package: kubuntu-debug-installer
