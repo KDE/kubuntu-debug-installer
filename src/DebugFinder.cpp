@@ -35,18 +35,29 @@ DebugFinder::DebugFinder(QObject *parent) :
     m_backend->init();
 }
 
+struct PackageMapEntryStruct
+{
+    QString src;
+    QString tgt;
+};
+
 QApt::Package *DebugFinder::getDbgPkg(QApt::Package *package)
 {
     if (!package) {
-        return 0;
+        return nullptr;
     }
 
-    QString srcPkg;
-    // TODO: map package names for Qt
-    if (package->sourcePackage() == "qt4-x11") {
-        srcPkg = "libqt4";
-    } else {
-        srcPkg = package->sourcePackage();
+    QString srcPkg = package->sourcePackage();
+
+    static const struct { QString src; QString tgt; } sourceMap[] = {
+        { QStringLiteral("qt4-x11"), QStringLiteral("libqt4") },
+    };
+    for (unsigned i = 0; i < sizeof sourceMap / sizeof *sourceMap; ++i) {
+        auto m = sourceMap[i];
+        if (m.src == package->sourcePackage()) {
+            srcPkg = m.tgt;
+            break;
+        }
     }
 
     QApt::Package *dbgPkg = 0;
@@ -66,7 +77,8 @@ QApt::Package *DebugFinder::getDbgPkg(QApt::Package *package)
         return dbgPkg;
     }
 
-    return 0;
+
+    return nullptr;
 }
 
 void DebugFinder::find(const QString &file)
@@ -76,7 +88,6 @@ void DebugFinder::find(const QString &file)
     }
 
     QApt::Package *package = m_backend->packageForFile(file);
-
     QApt::Package *dbgPkg = getDbgPkg(package);
     if (!dbgPkg) {
         emit foundNoDbgPkg(file);
