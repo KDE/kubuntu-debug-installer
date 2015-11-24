@@ -77,6 +77,19 @@ QApt::Package *DebugFinder::getDbgPkg(QApt::Package *package)
         return dbgPkg;
     }
 
+    // Qt 5 is spread over multiple sources, so static mapping would be
+    // rather error prone. Instead attempt to modify suitable source names
+    // according to convention and see if that yields a dbg package.
+    if (package->sourcePackage().endsWith(QStringLiteral("-opensource-src")) &&
+            package->upstreamVersion().startsWith(QStringLiteral("5."))) {
+        // TODO: this possibly should simply repeat the entire function?
+        QString name = package->sourcePackage();
+        name.replace(QStringLiteral("-opensource-src"), QStringLiteral("5"));
+        dbgPkg = m_backend->package(name + QStringLiteral("-dbg"));
+        if (dbgPkg) {
+            return dbgPkg;
+        }
+    }
 
     return nullptr;
 }
