@@ -10,12 +10,15 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 
+set(REQUIRED_QT_VERSION 5.0)
+find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Concurrent Test)
 find_package(KF5CoreAddons 5.0.0 REQUIRED)
 find_package(KF5I18n 5.0.0 REQUIRED)
 find_package(KF5WidgetsAddons 5.0.0 REQUIRED)
 
 find_package(QApt 3.0.0 REQUIRED)
 
+add_subdirectory(autotests)
 add_subdirectory(src)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
