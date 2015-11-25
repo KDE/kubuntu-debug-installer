@@ -1,3 +1,9 @@
+kubuntu-debug-installer (16.04ubuntu1) wily; urgency=medium
+
+  * Fix resolver for Qt5.
+
+ -- Harald Sitter <sitter@kde.org>  Wed, 25 Nov 2015 09:53:41 +0100
+
 kubuntu-debug-installer (15.10ubuntu2) wily; urgency=medium
 
   * Fix rules. "Make - Like Perl, but Worse"
