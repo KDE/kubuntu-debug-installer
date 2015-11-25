@@ -102,6 +102,23 @@ private Q_SLOTS:
         QVERIFY(spy.wait());
         QCOMPARE(spy.count(), 1);
     }
+
+    void testQt5()
+    {
+        QApt::Backend apt;
+        apt.init();
+        apt.removePackages(QApt::PackageList() << apt.package("qtsvg5-dbg"));
+
+        DebugFinder finder;
+        QSignalSpy spy(&finder, &DebugFinder::foundDbgPkg);
+        QMetaObject::invokeMethod(&finder, "find", Qt::QueuedConnection,
+                                  Q_ARG(QString, QString("/usr/lib/x86_64-linux-gnu/libQt5Svg.so.5")));
+        QVERIFY(spy.wait());
+        QCOMPARE(spy.count(), 1);
+        QList<QVariant> sig = spy.takeAt(0);
+        QCOMPARE(sig.count(), 1); // 1 arg
+        QCOMPARE(sig.at(0).toString(), QStringLiteral("qtsvg5-dbg"));
+    }
 };
 
 QTEST_MAIN(FinderTest)
