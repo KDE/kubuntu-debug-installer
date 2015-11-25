@@ -1,4 +1,4 @@
-kubuntu-debug-installer (16.04ubuntu1) wily; urgency=medium
+kubuntu-debug-installer (16.04ubuntu1) xenial; urgency=medium
 
   * Fix resolver for Qt5.
 
