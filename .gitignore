@@ -1,0 +1,5 @@
+po/
+Rakefile
+.kubuntu-rake/
+.releaseme/
+debian/source/local-options
